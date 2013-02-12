@@ -1,26 +1,34 @@
 {
-    "name":"reco",
-    "version":"0.0.1",
-    "description":"real-time collaboration with forms",
-    "main":"server/index.js",
-    "scripts":{
-        "test":"echo \"Error: no test specified\" && exit 1"
+  "name": "reco",
+  "version": "0.0.1",
+  "description": "real-time collaboration with forms",
+  "main": "server/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/raphaelstary/reco.git"
+  },
+  "keywords": [
+    "real-time",
+    "web"
+  ],
+  "author": "Raphael Stary",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "gitHead": "147d870bf8f14ccd3554e251ab5aa6e627f4431e",
+  "dependencies": {
+    "node-static": "~0.6.7",
+    "socket.io": "~0.9.13"
+  },
+  "engine": "node ~0.8.19",
+  "volo": {
+    "dependencies": {
+      "require": "github:jrburke/requirejs/2.1.4",
+      "knockout": "github:SteveSanderson/knockout/v2.2.1",
+      "domReady": "github:requirejs/domReady/2.0.1"
     },
-    "repository":{
-        "type":"git",
-        "url":"https://github.com/raphaelstary/reco.git"
-    },
-    "keywords":[
-        "real-time",
-        "web"
-    ],
-    "author":"Raphael Stary",
-    "license":"BSD",
-    "readmeFilename":"README.md",
-    "gitHead":"147d870bf8f14ccd3554e251ab5aa6e627f4431e",
-    "dependencies":{
-        "node-static":"~0.6.7",
-        "socket.io":"~0.9.13"
-    },
-    "engine":"node ~0.8.19"
+    "baseUrl": "client/js/lib"
+  }
 }
