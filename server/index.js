@@ -17,12 +17,17 @@ io.set('log level', 1);
 
 // Listen for incoming connections from clients
 io.sockets.on('connection', function (socket) {
+    socket.broadcast.emit('info', {'state':'new', 'user':'userOne'});
 
-    // Start listening for mouse move events
-    socket.on('mousemove', function (data) {
+    socket.on('update', function (data) {
+        socket.broadcast.emit('update', data);
+    });
 
-        // This line sends the event (broadcasts it)
-        // to everyone except the originating client.
-        socket.broadcast.emit('moving', data);
+    socket.on('lock', function (data) {
+        socket.broadcast.emit('lock', data);
+    });
+
+    socket.on('unlock', function (data) {
+        socket.broadcast.emit('unlock', data);
     });
 });
