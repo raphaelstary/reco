@@ -1,4 +1,4 @@
-require(['lib/knockout', 'plain/plainviewmodel', 'connector', 'lib/domReady'], function (ko, PlainViewModel, Connector) {
+require(['lib/knockout', 'plainviewmodel', 'connector', 'lib/domReady'], function (ko, PlainViewModel, Connector) {
     var url = 'http://localhost:8080';
     var connector = new Connector();
     connector.connect(url);
