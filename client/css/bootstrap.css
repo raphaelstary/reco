@@ -5376,10 +5376,10 @@ input[type="submit"].btn.btn-mini {
 
 .popover {
   position: absolute;
-  top: 0;
-  left: 0;
+  /*top: 0;*/
+  /*left: 0;*/
   z-index: 1010;
-  display: none;
+  /*display: none;*/
   max-width: 276px;
   padding: 1px;
   text-align: left;

@@ -10,7 +10,7 @@ require(['lib/knockout', 'multiviewmodel', 'connector', 'lib/domReady'], functio
     view.inputOne.subscribe(function (newValue) {
         connector.send({
             'id': id,
-            'user':'user1',
+            'client':'user1',
             'field':'inputOne',
             'value':newValue
         });
@@ -18,7 +18,7 @@ require(['lib/knockout', 'multiviewmodel', 'connector', 'lib/domReady'], functio
 
     view.inputOneSelected.subscribe(function (newValue) {
         var data = {
-            'user':'user1',
+            'client':'user1',
             'field':'inputOne'
         };
     });

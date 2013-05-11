@@ -30,16 +30,71 @@
     </div>
 </div>
 
-<div class="container">
-    <form>
-        <fieldset>
-            <legend>Plain</legend>
-            <label for="inputOne">Input one</label>
-            <input id="inputOne" type="text" data-bind="value: inputOne, valueUpdate: 'afterkeydown' " >
-        </fieldset>
-    </form>
-</div>
+<div class="row">
+    <div class="span5 offset1">
+        <form>
+            <fieldset>
+                <legend>Plain</legend>
 
+                <label for="inputOne">Input one</label>
+                <input id="inputOne" type="text" data-bind="value: inputOne, valueUpdate: 'afterkeydown' ">
+            <span class="help-inline">
+                <a href="#" data-bind="click: showHistoryByField.bind($data, 'inputOne')">
+                    <i class="icon-time"></i>
+                </a>
+            </span>
+
+                <label for="inputTwo">Input two</label>
+                <input id="inputTwo" type="text" data-bind="value: inputTwo, valueUpdate: 'afterkeydown' ">
+            <span class="help-inline">
+                <a href="#" data-bind="click: showHistoryByField.bind($data, 'inputTwo')">
+                    <i class="icon-time"></i>
+                </a>
+            </span>
+            </fieldset>
+        </form>
+
+        <div class="popover" data-bind="visible: shouldShowHistoryByField">
+            <div class="arrow"></div>
+            <div class="popover-inner">
+                <h3 class="popover-title">Input one history</h3>
+
+                <div class="popover-content " data-bind="foreach: historyByField">
+                    <span data-bind="text: field"></span>:
+                    <span data-bind="text: value"></span> by
+                    <span data-bind="text: client"></span></br>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--<div class="popover">-->
+    <!--<div class="arrow"></div>-->
+    <!--<div class="popover-inner">-->
+    <!--<h3 class="popover-title">Input user 1</h3>-->
+    <!--<div class="popover-content " data-bind="foreach: historyByClient">-->
+    <!--<span data-bind="text: field"></span>:-->
+    <!--<span data-bind="text: value"></span> by-->
+    <!--<span data-bind="text: client"></span></br>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+
+
+    <div class="span3">
+        <div class="popover">
+            <div class="arrow"></div>
+            <div class="popover-inner">
+                <h3 class="popover-title">Input by time</h3>
+
+                <div class="popover-content " data-bind="foreach: historyByTime">
+                    <span data-bind="text: field"></span>:
+                    <span data-bind="text: value"></span> by
+                    <span data-bind="text: client"></span></br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="/socket.io/socket.io.js"></script>
 <script data-main="js/plain" src="js/lib/require.js"></script>
 

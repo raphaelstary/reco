@@ -4,6 +4,7 @@ var app = require('http').createServer(handler),
 
 var fileServer = new staticHttp.Server('./client');
 app.listen(8080);
+var simpleUserHash = 0;
 
 function handler (request, response) {
 
@@ -17,7 +18,7 @@ io.set('log level', 1);
 
 // Listen for incoming connections from clients
 io.sockets.on('connection', function (socket) {
-    socket.broadcast.emit('info', {'state':'new', 'user':'userOne'});
+    socket.emit('info', {'state':'new', 'client':'client' + simpleUserHash++});
 
     socket.on('update', function (data) {
         socket.broadcast.emit('update', data);

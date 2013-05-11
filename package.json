@@ -19,10 +19,10 @@
   "readmeFilename": "README.md",
   "gitHead": "147d870bf8f14ccd3554e251ab5aa6e627f4431e",
   "dependencies": {
-    "node-static": "~0.6.7",
-    "socket.io": "~0.9.13"
+    "socket.io": "~0.9.14",
+    "node-static": "~0.6.9"
   },
-  "engine": "node ~0.8.19",
+  "engine": "node ~0.10.5",
   "volo": {
     "dependencies": {
       "require": "github:jrburke/requirejs/2.1.4",

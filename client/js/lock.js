@@ -7,7 +7,7 @@ require(['lib/knockout', 'lockviewmodel', 'connector', 'lib/domReady'], function
 
     view.inputOne.subscribe(function (newValue) {
         connector.send({
-            'user':'user1',
+            'client':'user1',
             'field':'inputOne',
             'value':newValue
         })
@@ -15,7 +15,7 @@ require(['lib/knockout', 'lockviewmodel', 'connector', 'lib/domReady'], function
 
     view.inputOneSelected.subscribe(function (newValue) {
         var data = {
-            'user':'user1',
+            'client':'user1',
             'field':'inputOne'
         };
 
