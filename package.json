@@ -19,14 +19,14 @@
   "readmeFilename": "README.md",
   "gitHead": "147d870bf8f14ccd3554e251ab5aa6e627f4431e",
   "dependencies": {
-    "socket.io": "~0.9.14",
-    "node-static": "~0.6.9"
+    "socket.io": "~0.9.15",
+    "node-static": "~0.7.0"
   },
-  "engine": "node ~0.10.5",
+  "engine": "node ~0.10.13",
   "volo": {
     "dependencies": {
-      "require": "github:jrburke/requirejs/2.1.4",
-      "knockout": "github:SteveSanderson/knockout/v2.2.1",
+      "require": "github:jrburke/requirejs/2.1.8",
+      "knockout": "github:knockout/knockout/v2.3.0",
       "domReady": "github:requirejs/domReady/2.0.1"
     },
     "baseUrl": "client/js/lib"

@@ -1,17 +1,18 @@
-var app = require('http').createServer(handler),
-    io = require('socket.io').listen(app),
-    staticHttp = require('node-static'); // for serving files
+var staticHttp = require('node-static');
 
-var fileServer = new staticHttp.Server('./client');
-app.listen(8080);
+var fileServer = new(staticHttp.Server)('./client');
+
 var simpleUserHash = 0;
 
-function handler (request, response) {
-
+var app = require('http').createServer(function (request, response) {
     request.addListener('end', function () {
         fileServer.serve(request, response);
-    });
-}
+    }).resume();
+});
+
+app.listen(8080);
+
+var io = require('socket.io').listen(app);
 
 // Delete this row if you want to see debug messages
 io.set('log level', 1);
