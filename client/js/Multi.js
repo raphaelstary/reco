@@ -1,4 +1,4 @@
-require(['lib/knockout', 'multiviewmodel', 'connector', 'lib/domReady'], function (ko, MultiViewModel, Connector) {
+require(['lib/knockout', 'MultiViewModel', 'Connector', 'lib/domReady'], function (ko, MultiViewModel, Connector) {
     var url = 'http://localhost:8080';
     var connector = new Connector();
     connector.connect(url);

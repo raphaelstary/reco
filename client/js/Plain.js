@@ -1,9 +1,12 @@
-require(['lib/knockout', 'plainviewmodel', 'connector', 'brain', 'history', 'lib/domReady'], function (ko, PlainViewModel, Connector, Brain, History) {
+require(['lib/knockout', 'PlainViewModel', 'Connector', 'Brain', 'History', 'lib/domReady'], function (ko, PlainViewModel, Connector, Brain, History) {
     var url = 'http://localhost:8080';
+
     var connector = new Connector();
     var brain = new Brain();
     var history = new History();
+
     connector.connect(url);
+
     var view = new PlainViewModel(history);
     ko.applyBindings(view);
 

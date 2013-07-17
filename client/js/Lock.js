@@ -1,4 +1,4 @@
-require(['lib/knockout', 'lockviewmodel', 'connector', 'lib/domReady'], function (ko, LockViewModel, Connector) {
+require(['lib/knockout', 'LockViewModel', 'Connector', 'lib/domReady'], function (ko, LockViewModel, Connector) {
     var url = 'http://localhost:8080';
     var connector = new Connector();
     connector.connect(url);
