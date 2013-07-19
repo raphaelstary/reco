@@ -41,6 +41,7 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'MergeCon
 
         urlParams['merge'] = newVal;
         urlJuggler.updateParams(urlParams);
+        mergeStrategy = newVal;
     });
 
     var historySubscription = configView.history.subscribe(function (newVal) {
@@ -91,7 +92,7 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'MergeCon
                     value: newVal
                 };
 
-//                history.add(data);
+                history.add(data);
                 connector.send(data);
 
             });
@@ -101,15 +102,18 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'MergeCon
 
                 console.log('update from: ' + key + ' with value: ' + newVal);
 
-                var data = {
-                    client: brain.clientId,
-                    field: key.slice(0, - INPUT_SELECTED_POSTFIX.length)
-                };
+                if (mergeStrategy === MergeConstant.LOCK) {
 
-                if (newVal) {
-                    connector.lock(data);
-                } else {
-                    connector.unlock(data);
+                    var data = {
+                        client: brain.clientId,
+                        field: key.slice(0, -INPUT_SELECTED_POSTFIX.length)
+                    };
+
+                    if (newVal) {
+                        connector.lock(data);
+                    } else {
+                        connector.unlock(data);
+                    }
                 }
             });
         }
@@ -126,8 +130,7 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'MergeCon
     connector.socket.on('update', function (data) {
         console.log('new socket update with data: ' + data);
 
-//        history.add(data);
-
+        history.add(data);
         view.update(data.field, data.value);
     });
 
