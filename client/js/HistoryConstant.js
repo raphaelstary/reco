@@ -1,7 +1,7 @@
 define(function () {
     return {
-        BY_OBJECT: 'by object',
-        BY_USER: 'by user',
-        BY_TIME: 'by time'
+        BY_OBJECT: 'byObject',
+        BY_USER: 'byUser',
+        BY_TIME: 'byTime'
     };
 });

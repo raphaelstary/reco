@@ -3,6 +3,6 @@ define(function () {
         BAR: 'bar',
         BUBBLE: 'bubble',
         OBJECT: 'object',
-        DYNAMIC_DOM: 'dynamic dom'
+        DYNAMIC_DOM: 'dynamicDom'
     };
 });
