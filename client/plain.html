@@ -18,54 +18,62 @@
 
             <a class="brand" href="#">reco - real time collaboration</a>
 
-            <div class="nav-collapse collapse">
+            <div id="config" class="nav-collapse collapse navbar-form form-inline">
+                    <select id="merge" class="span2"
+                            data-bind="options: mergeValues, value: merge, optionsCaption: 'choose merge'">
+                    </select>
 
-                <form class="navbar-form pull-right">
-                    <input id="user" class="span2" type="text" placeholder="user">
-                    <button type="submit" class="btn">Login</button>
-                </form>
+                    <select id="history" class="span2"
+                            data-bind="options: historyValues, value: history, optionsCaption: 'choose history'">
+                    </select>
+
+                    <select id="notification" class="span2"
+                            data-bind="options: notificationValues, value: notification, optionsCaption: 'choose notification'">
+                    </select>
+
+                    <input id="user" class="span2" type="text" placeholder="user name" data-bind="value: user">
             </div>
             <!--/.nav-collapse -->
         </div>
     </div>
 </div>
 
-<div class="row">
+<div id="mainView" class="row">
     <div class="span5 offset1">
-        <form>
+        <!--<form>-->
             <fieldset>
                 <legend>Plain</legend>
 
                 <label for="inputOne">Input one</label>
                 <input id="inputOne" type="text" data-bind="value: inputOne, valueUpdate: 'afterkeydown' ">
-            <span class="help-inline">
-                <a href="#" data-bind="click: showHistoryByField.bind($data, 'inputOne')">
-                    <i class="icon-time"></i>
-                </a>
-            </span>
+            <!--<span class="help-inline">-->
+                <!--<a href="#" data-bind="click: showHistoryByField.bind($data, 'inputOne')">-->
+                    <!--<i class="icon-time"></i>-->
+                <!--</a>-->
+            <!--</span>-->
 
                 <label for="inputTwo">Input two</label>
                 <input id="inputTwo" type="text" data-bind="value: inputTwo, valueUpdate: 'afterkeydown' ">
-            <span class="help-inline">
-                <a href="#" data-bind="click: showHistoryByField.bind($data, 'inputTwo')">
-                    <i class="icon-time"></i>
-                </a>
-            </span>
+            <!--<span class="help-inline">-->
+                <!--<a href="#" data-bind="click: showHistoryByField.bind($data, 'inputTwo')">-->
+                    <!--<i class="icon-time"></i>-->
+                <!--</a>-->
+            <!--</span>-->
             </fieldset>
-        </form>
+        <!--</form>-->
 
-        <div class="popover" data-bind="visible: shouldShowHistoryByField">
-            <div class="arrow"></div>
-            <div class="popover-inner">
-                <h3 class="popover-title">Input one history</h3>
-
-                <div class="popover-content " data-bind="foreach: historyByField">
-                    <span data-bind="text: field"></span>:
-                    <span data-bind="text: value"></span> by
-                    <span data-bind="text: client"></span></br>
-                </div>
-            </div>
-        </div>
+        <!--<div class="popover" data-bind="visible: shouldShowHistoryByField">-->
+            <!--<div class="arrow"></div>-->
+            <!--<div class="popover-inner">-->
+                <!--<h3 class="popover-title">Input one history</h3>-->
+<!---->
+                <!--<div class="popover-content " data-bind="foreach: historyByField">-->
+                    <!--<span data-bind="text: field"></span>:-->
+                    <!--<span data-bind="text: value"></span> by-->
+                    <!--<span data-bind="text: client"></span></br>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
     </div>
     <!--<div class="popover">-->
     <!--<div class="arrow"></div>-->
@@ -79,7 +87,7 @@
     <!--</div>-->
     <!--</div>-->
 
-
+<!--
     <div class="span3">
         <div class="popover">
             <div class="arrow"></div>
@@ -94,6 +102,7 @@
             </div>
         </div>
     </div>
+    -->
 </div>
 <script src="/socket.io/socket.io.js"></script>
 <script data-main="js/main.js" src="js/lib/require.js"></script>
