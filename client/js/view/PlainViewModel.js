@@ -1,4 +1,4 @@
-define(['lib/knockout'], function (ko) {
+define(['../lib/knockout'], function (ko) {
     function PlainViewModel(history) {
         this.history = history;
         this.inputOne = ko.observable();

@@ -1,4 +1,4 @@
-define(['lib/knockout'], function (ko) {
+define(['../lib/knockout'], function (ko) {
     function ConfigViewModel(mergeValues, historyValues, notificationValues, merge, history, notification, user) {
         this.mergeValues = mergeValues;
         this.historyValues = historyValues;

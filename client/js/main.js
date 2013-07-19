@@ -1,5 +1,5 @@
-require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'MergeConstant', 'HistoryConstant',
-    'NotificationConstant', 'ConfigViewModel', 'DynamicViewModel', 'utils/getValues', 'utils/parseUrlParams',
+require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constants/MergeConstant', 'constants/HistoryConstant',
+    'constants/NotificationConstant', 'view/ConfigViewModel', 'view/DynamicViewModel', 'utils/getValues', 'utils/parseUrlParams',
     'utils/orIfUndefined', 'UrlJuggler', 'lib/domReady'], function (ko, Connector, Brain, History, Messenger, MergeConstant, HistoryConstant, NotificationConstant, ConfigViewModel, DynamicViewModel, getValues, parseUrlParams, orIfUndefined, UrlJuggler) {
 
     var INPUT_PREFIX = 'input';
@@ -38,7 +38,9 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'MergeCon
 
     var mergeSubscription = configView.merge.subscribe(function (newVal) {
         console.log('merge update: ' + newVal);
-
+        if (newVal === undefined) {
+            newVal = MergeConstant.PLAIN;
+        }
         urlParams['merge'] = newVal;
         urlJuggler.updateParams(urlParams);
         mergeStrategy = newVal;
@@ -46,14 +48,18 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'MergeCon
 
     var historySubscription = configView.history.subscribe(function (newVal) {
         console.log('history update: ' + newVal);
-
+        if (newVal === undefined) {
+            newVal = HistoryConstant.BY_TIME;
+        }
         urlParams['history'] = newVal;
         urlJuggler.updateParams(urlParams);
     });
 
     var notificationSubscription = configView.notification.subscribe(function (newVal) {
         console.log('notify update: ' + newVal);
-
+        if (newVal === undefined) {
+            newVal = NotificationConstant.BUBBLE;
+        }
         urlParams['notification'] = newVal;
         urlJuggler.updateParams(urlParams);
     });
@@ -141,5 +147,13 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'MergeCon
     connector.socket.on('lock', function (data) {
         view.lock(data.field);
     });
+
+    //todo nxt steps:
+    //user name setzen durch server und dann anzeigen in der UI
+    //kann ueberschrieben werden client seitig
+    //
+    //dann history by time -> user -> object
+    //dann multi merge
+    //dann notifications
 
 });

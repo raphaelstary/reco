@@ -1,4 +1,4 @@
-define(['lib/knockout'], function (ko) {
+define(['../lib/knockout'], function (ko) {
     function LockViewModel(connector) {
         this.connector = connector;
         this.inputOne = ko.observable();

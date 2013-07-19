@@ -1,4 +1,4 @@
-define(['lib/knockout'], function (ko) {
+define(['../lib/knockout'], function (ko) {
     function DynamicViewModel(disabledPostfix, selectedPostfix, inputIds) {
         this.disabledPostfix = disabledPostfix;
         var self = this;

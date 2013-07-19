@@ -1,4 +1,4 @@
-define(['lib/knockout'], function (ko) {
+define(['../lib/knockout'], function (ko) {
     function MultiViewModel(connector) {
         this.connector = connector;
         this.inputOne = ko.observable();
