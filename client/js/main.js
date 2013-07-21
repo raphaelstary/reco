@@ -37,7 +37,6 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
     ko.applyBindings(view, document.getElementById('mainView'));
 
     var mergeSubscription = configView.merge.subscribe(function (newVal) {
-        console.log('merge update: ' + newVal);
         if (newVal === undefined) {
             newVal = MergeConstant.PLAIN;
         }
@@ -47,7 +46,6 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
     });
 
     var historySubscription = configView.history.subscribe(function (newVal) {
-        console.log('history update: ' + newVal);
         if (newVal === undefined) {
             newVal = HistoryConstant.BY_TIME;
         }
@@ -56,7 +54,6 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
     });
 
     var notificationSubscription = configView.notification.subscribe(function (newVal) {
-        console.log('notify update: ' + newVal);
         if (newVal === undefined) {
             newVal = NotificationConstant.BUBBLE;
         }
@@ -65,10 +62,14 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
     });
 
     var userSubscription = configView.user.subscribe(function (newVal) {
-        console.log('user update: ' + newVal);
+        if (newVal === undefined || newVal === null || newVal.trim() === '') {
+            newVal = 'pikatchu';
+        }
 
         urlParams['user'] = newVal;
         urlJuggler.updateParams(urlParams);
+        brain.clientId = newVal;
+        configView.user(newVal);
     });
 
     var isInputVar = function (key) {
@@ -130,7 +131,7 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
     connector.socket.on('info', function (data) {
         console.log('new socket info with data: ' + data);
 
-        brain.register(data);
+        brain.register(data, configView.user);
     });
 
     connector.socket.on('update', function (data) {
@@ -149,9 +150,6 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
     });
 
     //todo nxt steps:
-    //user name setzen durch server und dann anzeigen in der UI
-    //kann ueberschrieben werden client seitig
-    //
     //dann history by time -> user -> object
     //dann multi merge
     //dann notifications
