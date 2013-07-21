@@ -25,6 +25,10 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
 
     var userName = urlParams['user'];
 
+    if (userName !== undefined) {
+        brain.clientId = userName;
+    }
+
     var inputIds = [];
     var inputs = document.querySelectorAll('input[id*=' + INPUT_PREFIX + ']');
     for (var i = 0; i < inputs.length; i++) {
@@ -101,7 +105,7 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
 
                 history.add(data);
                 connector.send(data);
-
+                view.addHistoryByTime(data);
             });
 
         } else if (isSelectVar(key)) {
@@ -109,7 +113,7 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
 
                 console.log('update from: ' + key + ' with value: ' + newVal);
 
-                if (mergeStrategy === MergeConstant.LOCK) {
+                if (mergeStrategy == MergeConstant.LOCK) {
 
                     var data = {
                         client: brain.clientId,
@@ -129,14 +133,10 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
     connector.connect(URL);
 
     connector.socket.on('info', function (data) {
-        console.log('new socket info with data: ' + data);
-
         brain.register(data, configView.user);
     });
 
     connector.socket.on('update', function (data) {
-        console.log('new socket update with data: ' + data);
-
         history.add(data);
         view.update(data.field, data.value);
     });
@@ -150,6 +150,8 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
     });
 
     //todo nxt steps:
+    //fix param at startup thing
+    //fix HbT user issue
     //dann history by time -> user -> object
     //dann multi merge
     //dann notifications

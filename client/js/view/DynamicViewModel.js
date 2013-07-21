@@ -1,12 +1,15 @@
 define(['../lib/knockout'], function (ko) {
     function DynamicViewModel(disabledPostfix, selectedPostfix, inputIds) {
         this.disabledPostfix = disabledPostfix;
+
         var self = this;
         inputIds.forEach(function (inputId) {
             self[inputId] = ko.observable();
             self[inputId + disabledPostfix] = ko.observable(false);
             self[inputId + selectedPostfix] = ko.observable(false);
         });
+
+        this.historyByTime = ko.observableArray();
     }
 
     DynamicViewModel.prototype.update = function (fieldId, value) {
@@ -19,6 +22,10 @@ define(['../lib/knockout'], function (ko) {
 
     DynamicViewModel.prototype.unlock = function (fieldId) {
         this[fieldId + this.disabledPostfix](false);
+    };
+
+    DynamicViewModel.prototype.addHistoryByTime = function (data) {
+        this.historyByTime.push(data);
     };
 
     return DynamicViewModel;
