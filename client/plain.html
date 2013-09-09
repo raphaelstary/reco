@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>reco</title>
+    <title>reco - real time collaboration</title>
     <link href="css/bootstrap.css" rel="stylesheet">
     <style type="text/css">
         body {
@@ -16,21 +16,22 @@
     <div class="navbar-inner">
         <div class="container">
 
-            <a class="brand" href="#">reco - real time collaboration</a>
-
-            <div id="config" class="nav-collapse collapse navbar-form form-inline">
+            <div id="config" class="nav-collapse collapse navbar-form form-inline navbar-text">
+                <label for="merge">merge strategy</label>
                 <select id="merge" class="span2"
                         data-bind="options: mergeValues, value: merge, optionsCaption: 'choose merge'">
                 </select>
-
+                <label for="history">history strategy</label>
                 <select id="history" class="span2"
                         data-bind="options: historyValues, value: history, optionsCaption: 'choose history'">
                 </select>
 
+
+                <label for="notification">notify strategy</label>
                 <select id="notification" class="span2"
                         data-bind="options: notificationValues, value: notification, optionsCaption: 'choose notification'">
                 </select>
-
+                <label for="user">user</label>
                 <input id="user" class="span2" type="text" placeholder="user name" data-bind="value: user">
             </div>
             <!--/.nav-collapse -->
@@ -98,7 +99,7 @@
         <div class="popover">
             <div class="arrow"></div>
             <div class="popover-inner">
-                <h3 class="popover-title">Input by time</h3>
+                <h3 class="popover-title">History</h3>
 
                 <div class="popover-content " data-bind="foreach: historyByTime">
                     <span data-bind="text: field"></span>:

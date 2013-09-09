@@ -150,8 +150,8 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
     });
 
     //todo nxt steps:
-    //fix param at startup thing
-    //fix HbT user issue
+    // select predefined strategies
+    //dann fix HbT user issue
     //dann history by time -> user -> object
     //dann multi merge
     //dann notifications
