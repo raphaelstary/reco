@@ -1,6 +1,6 @@
 require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constants/MergeConstant', 'constants/HistoryConstant',
     'constants/NotificationConstant', 'view/ConfigViewModel', 'view/DynamicViewModel', 'utils/getValues', 'utils/parseUrlParams',
-    'utils/orIfUndefined', 'UrlJuggler', 'lib/domReady'], function (ko, Connector, Brain, History, Messenger, MergeConstant, HistoryConstant, NotificationConstant, ConfigViewModel, DynamicViewModel, getValues, parseUrlParams, orIfUndefined, UrlJuggler) {
+    'UrlJuggler', 'lib/domReady'], function (ko, Connector, Brain, History, Messenger, MergeConstant, HistoryConstant, NotificationConstant, ConfigViewModel, DynamicViewModel, getValues, parseUrlParams, UrlJuggler) {
 
     var INPUT_PREFIX = 'input';
     var INPUT_DISABLED_POSTFIX = 'Disabled';
@@ -15,13 +15,17 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
     var urlJuggler = new UrlJuggler(location.pathname, window.history.pushState.bind(window.history));
     var urlParams = parseUrlParams(location.search);
 
+
+    var mergeParam = urlParams['merge'];
+    var mergeStrategy = mergeParam !== undefined ? mergeParam : MergeConstant.PLAIN;
+    var historyParam = urlParams['history'];
+    var historyStrategy = historyParam !== undefined ? historyParam : HistoryConstant.BY_TIME;
+    var notifyParam = urlParams['notification'];
+    var notificationStrategy = notifyParam !== undefined ? notifyParam : NotificationConstant.BUBBLE;
+
     var configView = new ConfigViewModel(getValues(MergeConstant), getValues(HistoryConstant),
         getValues(NotificationConstant),
-        urlParams['merge'], urlParams['history'], urlParams['notification'], urlParams['user']);
-
-    var mergeStrategy = orIfUndefined.call(urlParams['merge'], MergeConstant.PLAIN);
-    var historyStrategy = orIfUndefined.call(urlParams['history'], HistoryConstant.BY_TIME);
-    var notificationStrategy = orIfUndefined.call(urlParams['notification'], NotificationConstant.BUBBLE);
+        mergeStrategy, historyStrategy, notificationStrategy, urlParams['user']);
 
     var userName = urlParams['user'];
 
@@ -150,7 +154,6 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
     });
 
     //todo nxt steps:
-    // select predefined strategies
     //dann fix HbT user issue
     //dann history by time -> user -> object
     //dann multi merge

@@ -3,10 +3,11 @@ define(['../lib/knockout'], function (ko) {
         this.mergeValues = mergeValues;
         this.historyValues = historyValues;
         this.notificationValues = notificationValues;
-        this.merge = merge !== null ? ko.observable(merge) : ko.observable();
-        this.history = history !== null ? ko.observable(history) : ko.observable();
-        this.notification = notification !== null ? ko.observable(notification) : ko.observable();
-        this.user = user !== null ? ko.observable(user) : ko.observable();
+
+        this.merge = ko.observable(merge);
+        this.history = ko.observable(history);
+        this.notification = ko.observable(notification);
+        this.user = ko.observable(user);
     }
 
     return ConfigViewModel;
