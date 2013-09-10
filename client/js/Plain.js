@@ -11,12 +11,11 @@ require(['lib/knockout', 'view/PlainViewModel', 'Connector', 'Brain', 'History',
     ko.applyBindings(view);
 
     view.inputOne.subscribe(function (newValue) {
-        console.log("new subscribe action: " + newValue);
 
         var data = {
-            'client':brain.clientId,
-            'field':'inputOne',
-            'value':newValue
+            'client': brain.clientId,
+            'field': 'inputOne',
+            'value': newValue
         };
 
         history.add(data);
@@ -25,12 +24,11 @@ require(['lib/knockout', 'view/PlainViewModel', 'Connector', 'Brain', 'History',
     });
 
     view.inputTwo.subscribe(function (newValue) {
-        console.log("new subscribe action: " + newValue);
 
         var data = {
-            'client':brain.clientId,
-            'field':'inputTwo',
-            'value':newValue
+            'client': brain.clientId,
+            'field': 'inputTwo',
+            'value': newValue
         };
 
         history.add(data);

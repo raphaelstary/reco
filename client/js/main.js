@@ -1,6 +1,6 @@
 require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constants/MergeConstant', 'constants/HistoryConstant',
     'constants/NotificationConstant', 'view/ConfigViewModel', 'view/DynamicViewModel', 'utils/getValues', 'utils/parseUrlParams',
-    'UrlJuggler', 'lib/domReady'], function (ko, Connector, Brain, History, Messenger, MergeConstant, HistoryConstant, NotificationConstant, ConfigViewModel, DynamicViewModel, getValues, parseUrlParams, UrlJuggler) {
+    'UrlJuggler', 'utils/generateId', 'lib/domReady'], function (ko, Connector, Brain, History, Messenger, MergeConstant, HistoryConstant, NotificationConstant, ConfigViewModel, DynamicViewModel, getValues, parseUrlParams, UrlJuggler, generateId) {
 
     var INPUT_PREFIX = 'input';
     var INPUT_DISABLED_POSTFIX = 'Disabled';
@@ -37,6 +37,22 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
     var inputs = document.querySelectorAll('input[id*=' + INPUT_PREFIX + ']');
     for (var i = 0; i < inputs.length; i++) {
         inputIds.push(inputs[i].id);
+
+        (function (key) {
+            inputs[i].addEventListener('keyup', function (event) {
+                var data = {
+                    client: brain.clientId,
+                    id: generateId(),
+                    field: key,
+                    value: this.value
+                };
+
+                history.add(data);
+                connector.send(data);
+                view.historyByTime(history.getByTime());
+
+            }, false);
+        })(inputs[i].id)
     }
 
     var view = new DynamicViewModel(INPUT_DISABLED_POSTFIX, INPUT_SELECTED_POSTFIX, inputIds);
@@ -95,27 +111,8 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
     var subscriptionDict = {};
     Object.getOwnPropertyNames(view).forEach(function (key) {
 
-        if (isInputVar(key)) {
-
+        if (isSelectVar(key)) {
             subscriptionDict[key] = view[key].subscribe(function (newVal) {
-
-                console.log('update from: ' + key + ' with value: ' + newVal);
-
-                var data = {
-                    client: brain.clientId,
-                    field: key,
-                    value: newVal
-                };
-
-                history.add(data);
-                connector.send(data);
-                view.addHistoryByTime(data);
-            });
-
-        } else if (isSelectVar(key)) {
-            subscriptionDict[key] = view[key].subscribe(function (newVal) {
-
-                console.log('update from: ' + key + ' with value: ' + newVal);
 
                 if (mergeStrategy == MergeConstant.LOCK) {
 
@@ -143,6 +140,16 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
     connector.socket.on('update', function (data) {
         history.add(data);
         view.update(data.field, data.value);
+
+        var historyData;
+        if (historyStrategy === HistoryConstant.BY_TIME) {
+            historyData = history.getByTime();
+        } else if (historyStrategy === HistoryConstant.BY_OBJECT) {
+
+        } else if (historyStrategy === HistoryConstant.BY_USER) {
+
+        }
+        view.historyByTime(historyData);
     });
 
     connector.socket.on('unlock', function (data) {
@@ -154,7 +161,6 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
     });
 
     //todo nxt steps:
-    //dann fix HbT user issue
     //dann history by time -> user -> object
     //dann multi merge
     //dann notifications

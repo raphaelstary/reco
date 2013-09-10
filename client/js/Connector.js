@@ -8,8 +8,6 @@ define(function () {
     };
 
     Connector.prototype.send = function (data) {
-        console.log('send data: ' + data);
-
         this.socket.emit('update', data);
     };
 

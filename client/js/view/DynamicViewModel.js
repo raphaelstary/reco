@@ -9,7 +9,7 @@ define(['../lib/knockout'], function (ko) {
             self[inputId + selectedPostfix] = ko.observable(false);
         });
 
-        this.historyByTime = ko.observableArray();
+        this.historyByTime = ko.observable();
     }
 
     DynamicViewModel.prototype.update = function (fieldId, value) {
@@ -22,10 +22,6 @@ define(['../lib/knockout'], function (ko) {
 
     DynamicViewModel.prototype.unlock = function (fieldId) {
         this[fieldId + this.disabledPostfix](false);
-    };
-
-    DynamicViewModel.prototype.addHistoryByTime = function (data) {
-        this.historyByTime.push(data);
     };
 
     return DynamicViewModel;
