@@ -41,31 +41,35 @@
 
 <div id="mainView" class="row">
     <div class="span5 offset1">
-        <!--<form>-->
         <fieldset>
             <legend>Plain</legend>
 
             <label for="inputOne">Input one</label>
             <input id="inputOne" type="text"
                    data-bind="value: inputOne, valueUpdate: 'afterkeydown', disable: inputOneDisabled, hasFocus: inputOneSelected">
-            <!--<span class="help-inline">-->
-            <!--<a href="#" data-bind="click: showHistoryByField.bind($data, 'inputOne')">-->
-            <!--<i class="icon-time"></i>-->
-            <!--</a>-->
-            <!--</span>-->
+            <span class="help-inline" data-bind="visible: isHistoryByFieldVisible">
+                <a href="#" data-bind="click: showHistoryByField.bind($data, 'inputOne')">
+                    <i class="icon-time"></i>
+                </a>
+            </span>
 
             <label for="inputTwo">Input two</label>
             <input id="inputTwo" type="text"
                    data-bind="value: inputTwo, valueUpdate: 'afterkeydown', disable: inputTwoDisabled, hasFocus: inputTwoSelected">
-            <!--<span class="help-inline">-->
-            <!--<a href="#" data-bind="click: showHistoryByField.bind($data, 'inputTwo')">-->
-            <!--<i class="icon-time"></i>-->
-            <!--</a>-->
-            <!--</span>-->
+            <span class="help-inline" data-bind="visible: isHistoryByFieldVisible">
+                <a href="#" data-bind="click: showHistoryByField.bind($data, 'inputTwo')">
+                    <i class="icon-time"></i>
+                </a>
+            </span>
 
             <label for="inputThree">Input three</label>
             <input id="inputThree" type="text"
                    data-bind="value: inputThree, valueUpdate: 'afterkeydown', disable: inputThreeDisabled, hasFocus: inputThreeSelected">
+            <span class="help-inline" data-bind="visible: isHistoryByFieldVisible">
+                <a href="#" data-bind="click: showHistoryByField.bind($data, 'inputThree')">
+                    <i class="icon-time"></i>
+                </a>
+            </span>
 
         </fieldset>
         <!--</form>-->
@@ -101,10 +105,11 @@
             <div class="popover-inner">
                 <h3 class="popover-title">History</h3>
 
-                <div class="popover-content " data-bind="foreach: historyByTime">
+                <div class="popover-content " data-bind="foreach: history">
                     <span data-bind="text: field"></span>:
                     <span data-bind="text: value"></span> by
-                    <span data-bind="text: client"></span></br>
+                    <span data-bind="text: client"></span>
+                    <br>
                 </div>
             </div>
         </div>

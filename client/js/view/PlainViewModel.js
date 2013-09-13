@@ -5,7 +5,7 @@ define(['../lib/knockout'], function (ko) {
         this.inputTwo = ko.observable();
         this.shouldShowHistoryByField = ko.observable(false);
         this.historyByField = ko.observableArray();
-        this.historyByTime = ko.observableArray();
+        this.history = ko.observableArray();
         this.historyByClient = ko.observableArray();
     }
 

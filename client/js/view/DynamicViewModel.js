@@ -1,6 +1,7 @@
-define(['../lib/knockout'], function (ko) {
-    function DynamicViewModel(disabledPostfix, selectedPostfix, inputIds) {
+define(['../lib/knockout', 'constants/HistoryConstant'], function (ko, HistoryConstant) {
+    function DynamicViewModel(disabledPostfix, selectedPostfix, inputIds, history, hStrategy) {
         this.disabledPostfix = disabledPostfix;
+        this.historyRepo = history;
 
         var self = this;
         inputIds.forEach(function (inputId) {
@@ -9,7 +10,11 @@ define(['../lib/knockout'], function (ko) {
             self[inputId + selectedPostfix] = ko.observable(false);
         });
 
-        this.historyByTime = ko.observable();
+        this.history = ko.observable();
+        this.isHistoryByFieldVisible = ko.observable(hStrategy === HistoryConstant.BY_OBJECT);
+        this.isHistoryByUserVisible = ko.observable(hStrategy === HistoryConstant.BY_USER);
+        this.fieldForHistory = "";
+        this.clientForHistory = "";
     }
 
     DynamicViewModel.prototype.update = function (fieldId, value) {
@@ -22,6 +27,16 @@ define(['../lib/knockout'], function (ko) {
 
     DynamicViewModel.prototype.unlock = function (fieldId) {
         this[fieldId + this.disabledPostfix](false);
+    };
+
+    DynamicViewModel.prototype.showHistoryByField = function (fieldId) {
+        this.fieldForHistory = fieldId;
+        this.history(this.historyRepo.getByField(fieldId));
+    };
+
+    DynamicViewModel.prototype.showHistoryByUser = function (clientId) {
+        this.clientForHistory = clientId;
+        this.history(this.historyRepo.getByClient(clientId));
     };
 
     return DynamicViewModel;
