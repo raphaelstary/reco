@@ -28,7 +28,7 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
     var userName = urlParams['user'];
 
     if (userName !== undefined) {
-        brain.clientId = userName;
+        brain.userId = userName;
     }
 
     var inputIds = [];
@@ -53,7 +53,7 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
     app.setUpConnection(URL);
 
     //todo nxt steps:
-    //dann history by time -> user -> object
+    //dann -> user ->
     //dann multi merge
     //dann notifications
 

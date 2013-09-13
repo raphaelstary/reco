@@ -28,7 +28,13 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
         this.urlParams['history'] = newVal;
         this.urlJuggler.updateParams(this.urlParams);
 
-        this.view.isHistoryByFieldVisible(this.configView.history() === HistoryConstant.BY_OBJECT);
+        var history = this.configView.history();
+        this.view.history(this.historyManager.getHistoryData(history));
+        this.view.isHistoryByFieldVisible(history === HistoryConstant.BY_OBJECT);
+        this.view.isHistoryByUserVisible(history === HistoryConstant.BY_USER);
+        if (history === HistoryConstant.BY_USER) {
+            this.view.users(this.history.getAllUsers())
+        }
     };
 
     SubscriptionManager.prototype.handleNotification = function (newVal) {
@@ -46,7 +52,7 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
 
         this.urlParams['user'] = newVal;
         this.urlJuggler.updateParams(this.urlParams);
-        this.brain.clientId = newVal;
+        this.brain.userId = newVal;
         this.configView.user(newVal);
     };
 
@@ -64,7 +70,7 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
                 if (self.configView.merge() == MergeConstant.LOCK) {
 
                     var data = {
-                        client: self.brain.clientId,
+                        user: self.brain.userId,
                         field: key.slice(0, -InputConstant.SELECTED_POSTFIX.length)
                     };
 
@@ -82,7 +88,7 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
         var self = this;
         field.addEventListener('keyup', function (event) {
             var data = {
-                client: self.brain.clientId,
+                user: self.brain.userId,
                 id: self.generateId(),
                 field: key,
                 value: event.target.value
@@ -91,6 +97,7 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
             self.history.add(data);
             self.connector.send(data);
 
+            self.view.users(self.history.getAllUsers());
             self.view.history(self.historyManager.getHistoryData(self.configView.history()));
 
         }, false);

@@ -13,7 +13,7 @@ require(['lib/knockout', 'view/PlainViewModel', 'Connector', 'Brain', 'History',
     view.inputOne.subscribe(function (newValue) {
 
         var data = {
-            'client': brain.clientId,
+            'user': brain.userId,
             'field': 'inputOne',
             'value': newValue
         };
@@ -26,7 +26,7 @@ require(['lib/knockout', 'view/PlainViewModel', 'Connector', 'Brain', 'History',
     view.inputTwo.subscribe(function (newValue) {
 
         var data = {
-            'client': brain.clientId,
+            'user': brain.userId,
             'field': 'inputTwo',
             'value': newValue
         };

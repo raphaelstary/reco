@@ -6,7 +6,7 @@ define(['../lib/knockout'], function (ko) {
         this.shouldShowHistoryByField = ko.observable(false);
         this.historyByField = ko.observableArray();
         this.history = ko.observableArray();
-        this.historyByClient = ko.observableArray();
+        this.historyByUser = ko.observableArray();
     }
 
     PlainViewModel.prototype.update = function (data) {

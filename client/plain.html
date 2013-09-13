@@ -72,32 +72,15 @@
             </span>
 
         </fieldset>
-        <!--</form>-->
-
-        <!--<div class="popover" data-bind="visible: shouldShowHistoryByField">-->
-        <!--<div class="arrow"></div>-->
-        <!--<div class="popover-inner">-->
-        <!--<h3 class="popover-title">Input one history</h3>-->
-        <!---->
-        <!--<div class="popover-content " data-bind="foreach: historyByField">-->
-        <!--<span data-bind="text: field"></span>:-->
-        <!--<span data-bind="text: value"></span> by-->
-        <!--<span data-bind="text: client"></span></br>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
     </div>
-    <!--<div class="popover">-->
-    <!--<div class="arrow"></div>-->
-    <!--<div class="popover-inner">-->
-    <!--<h3 class="popover-title">Input user 1</h3>-->
-    <!--<div class="popover-content " data-bind="foreach: historyByClient">-->
-    <!--<span data-bind="text: field"></span>:-->
-    <!--<span data-bind="text: value"></span> by-->
-    <!--<span data-bind="text: client"></span></br>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--</div>-->
+
+    <ul data-bind="visible: isHistoryByUserVisible, foreach: users">
+        <li>
+            <a href="#" data-bind="click: $parent.showHistoryByUser.bind($parent, $data)">
+                <i class="icon-user"></i> <span data-bind="text: $data"></span>
+            </a>
+        </li>
+    </ul>
 
     <div class="span3">
         <div class="popover">
@@ -108,13 +91,14 @@
                 <div class="popover-content " data-bind="foreach: history">
                     <span data-bind="text: field"></span>:
                     <span data-bind="text: value"></span> by
-                    <span data-bind="text: client"></span>
+                    <span data-bind="text: user"></span>
                     <br>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 <script src="/socket.io/socket.io.js"></script>
 <script data-main="js/main.js" src="js/lib/require.js"></script>
 

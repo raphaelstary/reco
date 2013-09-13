@@ -5,21 +5,21 @@ require(['lib/knockout', 'view/MultiViewModel', 'Connector', 'lib/domReady'], fu
     var view = new MultiViewModel(connector);
     ko.applyBindings(view);
 
-    var id = Math.floor(Math.random()*101);
+    var id = Math.floor(Math.random() * 101);
 
     view.inputOne.subscribe(function (newValue) {
         connector.send({
             'id': id,
-            'client':'user1',
-            'field':'inputOne',
-            'value':newValue
+            'user': 'user1',
+            'field': 'inputOne',
+            'value': newValue
         });
     });
 
     view.inputOneSelected.subscribe(function (newValue) {
         var data = {
-            'client':'user1',
-            'field':'inputOne'
+            'user': 'user1',
+            'field': 'inputOne'
         };
     });
 

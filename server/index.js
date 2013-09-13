@@ -1,11 +1,11 @@
 var staticHttp = require('node-static');
 
-var fileServer = new(staticHttp.Server)('./client');
+var fileServer = new (staticHttp.Server)('./client');
 
 var simpleUserHash = 0;
 
 var app = require('http').createServer(function (request, response) {
-    request.addListener('end', function () {
+    request.addListener('end',function () {
         fileServer.serve(request, response);
     }).resume();
 });
@@ -19,7 +19,7 @@ io.set('log level', 1);
 
 // Listen for incoming connections from clients
 io.sockets.on('connection', function (socket) {
-    socket.emit('info', {'state':'new', 'client':'client' + simpleUserHash++});
+    socket.emit('info', {'state': 'new', 'user': 'user' + simpleUserHash++});
 
     socket.on('update', function (data) {
         socket.broadcast.emit('update', data);

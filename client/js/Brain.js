@@ -1,12 +1,12 @@
 define(function () {
     function Brain() {
-        this.clientId = undefined;
+        this.userId = undefined;
     }
 
     Brain.prototype.register = function (data, callbackToSetUserName) {
-        if (this.clientId === undefined && data.state === 'new' && data.client !== undefined) {
-            this.clientId = data.client;
-            callbackToSetUserName(data.client);
+        if (this.userId === undefined && data.state === 'new' && data.user !== undefined) {
+            this.userId = data.user;
+            callbackToSetUserName(data.user);
         }
     };
 

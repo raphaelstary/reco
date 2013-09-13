@@ -15,6 +15,7 @@ define(function () {
         this.history.add(data);
         this.view.update(data.field, data.value);
 
+        this.view.users(this.history.getAllUsers());
         this.view.history(this.historyManager.getHistoryData(this.configView.history()));
     };
 

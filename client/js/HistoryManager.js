@@ -12,7 +12,7 @@ define(['constants/HistoryConstant'], function (HistoryConstant) {
             return this.history.getByField(this.view.fieldForHistory);
 
         } else if (strategy === HistoryConstant.BY_USER) {
-            return this.history.getByClient(this.view.clientForHistory)
+            return this.history.getByUser(this.view.userForHistory)
         }
 
         return {};
