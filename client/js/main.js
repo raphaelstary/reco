@@ -53,7 +53,6 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
     app.setUpConnection(URL);
 
     //todo nxt steps:
-    //dann -> user ->
     //dann multi merge
     //dann notifications
 
