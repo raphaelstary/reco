@@ -52,6 +52,11 @@
                     <i class="icon-time"></i>
                 </a>
             </span>
+            <span class="help-block" data-bind="visible: isMultiMergeVisible">
+                <ul data-bind="foreach: inputOneValues">
+                    <li data-bind="text: value"></li>
+                </ul>
+            </span>
 
             <label for="inputTwo">Input two</label>
             <input id="inputTwo" type="text"
@@ -61,6 +66,11 @@
                     <i class="icon-time"></i>
                 </a>
             </span>
+            <span class="help-block" data-bind="visible: isMultiMergeVisible">
+                <ul data-bind="foreach: inputTwoValues">
+                    <li data-bind="text: value"></li>
+                </ul>
+            </span>
 
             <label for="inputThree">Input three</label>
             <input id="inputThree" type="text"
@@ -69,6 +79,11 @@
                 <a href="#" data-bind="click: showHistoryByField.bind($data, 'inputThree')">
                     <i class="icon-time"></i>
                 </a>
+            </span>
+            <span class="help-block" data-bind="visible: isMultiMergeVisible">
+                <ul data-bind="foreach: inputThreeValues">
+                    <li data-bind="text: value"></li>
+                </ul>
             </span>
 
         </fieldset>

@@ -37,8 +37,7 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
         inputIds.push(inputs[i].id);
     }
 
-    var view = new DynamicViewModel(InputConstant.DISABLED_POSTFIX, InputConstant.SELECTED_POSTFIX, inputIds, history,
-        configView.history());
+    var view = new DynamicViewModel(inputIds, history, configView.history(), configView.merge());
 
     ko.applyBindings(configView, document.getElementById('config'));
     ko.applyBindings(view, document.getElementById('mainView'));

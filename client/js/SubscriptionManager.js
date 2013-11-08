@@ -1,5 +1,5 @@
 define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/MergeConstant',
-    'constants/NotificationConstant'], function (InputConstant, HistoryConstant, MergeConstant, NotificationConstant) {
+    'constants/NotificationConstant', 'lib/knockout'], function (InputConstant, HistoryConstant, MergeConstant, NotificationConstant, ko) {
     function SubscriptionManager(view, configView, connector, brain, urlJuggler, urlParams, generateIdFn, history, historyManager) {
         this.view = view;
         this.configView = configView;
@@ -18,7 +18,8 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
         }
         this.urlParams['merge'] = newVal;
         this.urlJuggler.updateParams(this.urlParams);
-//            this.mergeStrategy = newVal; TODO do i ned a writable merge strategy field??
+
+        this.view.isMultiMergeVisible(newVal === MergeConstant.MULTI);
     };
 
     SubscriptionManager.prototype.handleHistory = function (newVal) {
@@ -28,7 +29,7 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
         this.urlParams['history'] = newVal;
         this.urlJuggler.updateParams(this.urlParams);
 
-        var history = this.configView.history();
+        var history = this.configView.history(); // why not newVal? is there a diff? what did i do!
         this.view.history(this.historyManager.getHistoryData(history));
         this.view.isHistoryByFieldVisible(history === HistoryConstant.BY_OBJECT);
         this.view.isHistoryByUserVisible(history === HistoryConstant.BY_USER);
@@ -87,20 +88,44 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
     SubscriptionManager.prototype.handleDynamicInputChangeOnlyByUser = function (field, key) {
         var self = this;
         field.addEventListener('keyup', function (event) {
-            var data = {
-                user: self.brain.userId,
-                id: self.generateId(),
-                field: key,
-                value: event.target.value
-            };
 
-            self.history.add(data);
-            self.connector.send(data);
+            //is multi merge
+            if (self.configView.history() === HistoryConstant.MULTI) {
+                var valuesConcat = "";
 
-            self.view.users(self.history.getAllUsers());
-            self.view.history(self.historyManager.getHistoryData(self.configView.history()));
+                ko.utils.arrayForEach(self.view[key + InputConstant.VALUES_POSTFIX](), function (valueObj) {
+                    if (valueObj.active()) {
+                        valueObj.value(event.target.value);
+                    }
 
-        }, false);
+                    valuesConcat += valueObj.value();
+                });
+
+                self.view[key](valuesConcat);
+
+                self._newValueFromUser(key, valuesConcat, ko.toJSON(self.view[key + InputConstant.VALUES_POSTFIX]()));
+
+            } else { //normal everything else
+                self._newValueFromUser(key, event.target.value);
+            }
+        });
+    };
+
+    SubscriptionManager.prototype._newValueFromUser = function (key, value, multiList) {
+        var self = this;
+        var data = {
+            user: self.brain.userId,
+            id: self.generateId(),
+            field: key,
+            value: value,
+            multiValues: multiList
+        };
+
+        self.history.add(data);
+        self.connector.send(data);
+
+        self.view.users(self.history.getAllUsers());
+        self.view.history(self.historyManager.getHistoryData(self.configView.history()));
     };
 
     return SubscriptionManager;

@@ -1,19 +1,21 @@
-define(['../lib/knockout', 'constants/HistoryConstant'], function (ko, HistoryConstant) {
+define(['lib/knockout', 'TextToken', 'constants/HistoryConstant', 'constants/MergeConstant',
+    'constants/InputConstant'], function (ko, TextToken, HistoryConstant, MergeConstant, InputConstant) {
 
-    function DynamicViewModel(disabledPostfix, selectedPostfix, inputIds, history, hStrategy) {
-        this.disabledPostfix = disabledPostfix;
+    function DynamicViewModel(inputIds, history, historyStrategy, mergeStrategy) {
         this.historyRepo = history;
 
         var self = this;
         inputIds.forEach(function (inputId) {
             self[inputId] = ko.observable();
-            self[inputId + disabledPostfix] = ko.observable(false);
-            self[inputId + selectedPostfix] = ko.observable(false);
+            self[inputId + InputConstant.DISABLED_POSTFIX] = ko.observable(false);
+            self[inputId + InputConstant.SELECTED_POSTFIX] = ko.observable(false);
+            self[inputId + InputConstant.VALUES_POSTFIX] = ko.observableArray([new TextToken()]);
         });
 
         this.history = ko.observable();
-        this.isHistoryByFieldVisible = ko.observable(hStrategy === HistoryConstant.BY_OBJECT);
-        this.isHistoryByUserVisible = ko.observable(hStrategy === HistoryConstant.BY_USER);
+        this.isHistoryByFieldVisible = ko.observable(historyStrategy === HistoryConstant.BY_OBJECT);
+        this.isHistoryByUserVisible = ko.observable(historyStrategy === HistoryConstant.BY_USER);
+        this.isMultiMergeVisible = ko.observable(mergeStrategy === MergeConstant.MULTI);
         this.fieldForHistory = "";
         this.userForHistory = "";
         this.users = ko.observable([]);
@@ -24,11 +26,11 @@ define(['../lib/knockout', 'constants/HistoryConstant'], function (ko, HistoryCo
     };
 
     DynamicViewModel.prototype.lock = function (fieldId) {
-        this[fieldId + this.disabledPostfix](true);
+        this[fieldId + InputConstant.DISABLED_POSTFIX](true);
     };
 
     DynamicViewModel.prototype.unlock = function (fieldId) {
-        this[fieldId + this.disabledPostfix](false);
+        this[fieldId + InputConstant.DISABLED_POSTFIX](false);
     };
 
     DynamicViewModel.prototype.showHistoryByField = function (fieldId) {
