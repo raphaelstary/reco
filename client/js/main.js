@@ -2,7 +2,9 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
     'constants/HistoryConstant', 'constants/NotificationConstant', 'view/ConfigViewModel', 'view/DynamicViewModel',
     'utils/getValues', 'utils/parseUrlParams', 'UrlJuggler', 'utils/generateId', 'constants/InputConstant', 'App',
     'ConnectionManager', 'HistoryManager', 'SubscriptionManager',
-    'lib/domReady'], function (ko, Connector, Brain, History, Messenger, MergeConstant, HistoryConstant, NotificationConstant, ConfigViewModel, DynamicViewModel, getValues, parseUrlParams, UrlJuggler, generateId, InputConstant, App, ConnectionManager, HistoryManager, SubscriptionManager) {
+    'lib/domReady'], function (ko, Connector, Brain, History, Messenger, MergeConstant, HistoryConstant,
+        NotificationConstant, ConfigViewModel, DynamicViewModel, getValues, parseUrlParams, UrlJuggler, generateId,
+        InputConstant, App, ConnectionManager, HistoryManager, SubscriptionManager) {
 
     var URL = location.origin;
 

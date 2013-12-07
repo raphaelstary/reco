@@ -1,5 +1,6 @@
 define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/MergeConstant',
-    'constants/NotificationConstant', 'lib/knockout'], function (InputConstant, HistoryConstant, MergeConstant, NotificationConstant, ko) {
+    'constants/NotificationConstant', 'lib/knockout', 'TextToken', 'utils/generateId'], function (InputConstant,
+    HistoryConstant, MergeConstant, NotificationConstant, ko, TextToken, generateId) {
     function SubscriptionManager(view, configView, connector, brain, urlJuggler, urlParams, generateIdFn, history, historyManager) {
         this.view = view;
         this.configView = configView;
@@ -90,19 +91,24 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
         field.addEventListener('keyup', function (event) {
 
             //is multi merge
-            if (self.configView.history() === HistoryConstant.MULTI) {
+            if (self.configView.merge() === MergeConstant.MULTI) {
                 var valuesConcat = "";
+
+                var noActiveToken = true;
 
                 ko.utils.arrayForEach(self.view[key + InputConstant.VALUES_POSTFIX](), function (valueObj) {
                     if (valueObj.active()) {
                         valueObj.value(event.target.value);
+                        noActiveToken = false;
                     }
 
                     valuesConcat += valueObj.value();
                 });
 
-                self.view[key](valuesConcat);
-
+                if (noActiveToken) {
+                    self.view[key + InputConstant.VALUES_POSTFIX].push(new TextToken(generateId(), event.target.value, true));
+                    valuesConcat = event.target.value;
+                }
                 self._newValueFromUser(key, valuesConcat, ko.toJSON(self.view[key + InputConstant.VALUES_POSTFIX]()));
 
             } else { //normal everything else
