@@ -41,6 +41,22 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
 
     var view = new DynamicViewModel(inputIds, history, configView.history(), configView.merge());
 
+    ko.bindingHandlers.contentEditable = {
+        init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+            var value = valueAccessor();
+            ko.unwrap(value);
+
+            element.addEventListener('keyup', function (event) {
+                value(event.target.innerText);
+            });
+        },
+        update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+            var value = valueAccessor();
+            var unWrappedValue = ko.unwrap(value);
+            element.innerText = unWrappedValue != null ? unWrappedValue : "";
+        }
+    };
+
     ko.applyBindings(configView, document.getElementById('config'));
     ko.applyBindings(view, document.getElementById('mainView'));
 

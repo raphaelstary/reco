@@ -52,11 +52,10 @@
                     <i class="icon-time"></i>
                 </a>
             </span>
-            <span class="help-block" data-bind="visible: isMultiMergeVisible">
-                <ul data-bind="foreach: inputOneValues">
-                    <li data-bind="text: value"></li>
-                </ul>
-            </span>
+            <div class="help-block"
+                 data-bind="visible: isMultiMergeVisible, attr: {contentEditable: isMultiMergeVisible}, contentEditable:inputOne">
+
+            </div>
 
             <label for="inputTwo">Input two</label>
             <input id="inputTwo" type="text"
@@ -67,9 +66,7 @@
                 </a>
             </span>
             <span class="help-block" data-bind="visible: isMultiMergeVisible">
-                <ul data-bind="foreach: inputTwoValues">
-                    <li data-bind="text: value"></li>
-                </ul>
+
             </span>
 
             <label for="inputThree">Input three</label>
@@ -81,9 +78,7 @@
                 </a>
             </span>
             <span class="help-block" data-bind="visible: isMultiMergeVisible">
-                <ul data-bind="foreach: inputThreeValues">
-                    <li data-bind="text: value"></li>
-                </ul>
+
             </span>
 
         </fieldset>
