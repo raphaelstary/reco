@@ -7,6 +7,8 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
         InputConstant, App, ConnectionManager, HistoryManager, SubscriptionManager) {
 
     var URL = location.origin;
+    var LOCAL_CSS = "label-info";
+    var REMOTE_CSS = "label-warning";
 
     var connector = new Connector();
     var brain = new Brain();
@@ -43,19 +45,102 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
 
     ko.bindingHandlers.contentEditable = {
         init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
-            var value = valueAccessor();
-            ko.unwrap(value);
+            var textObservable = valueAccessor().text;
+            var htmlObservable = valueAccessor().html;
 
             element.addEventListener('keyup', function (event) {
-                value(event.target.innerText);
+                if (event.target.innerText == textObservable()) //todo check if even useful
+                    return;
+
+                var selection = window.getSelection();
+                var anchorOffset = selection.anchorOffset;
+                var focusOffset = selection.focusOffset;
+
+                var children = event.target.children;
+                var textNodes = [];
+                var node;
+                for (var i = 0; i < children.length; i++) {
+                    node = children[i];
+                    textNodes.push({css: node.classList[1], text: node.textContent});
+                }
+
+                // if it's the 1st character help with init
+                if (textNodes.length == 0 && event.target.innerText.length > 0)
+                    textNodes.push({css: LOCAL_CSS, text: event.target.innerText});
+
+                var oldTextTotal = textObservable() != null ? textObservable() : "";
+
+                // user added >0 characters -> longer
+                if (event.target.innerText.length > oldTextTotal.length) {
+                    var diffCount = event.target.textContent.length - oldTextTotal.length;
+                    var textOffset = 0;
+
+                    for (i = 0; i < textNodes.length; i++) {
+                        var txtNode = textNodes[i];
+
+                        for (var u = 0; u < txtNode.text.length; u++) {
+
+                            // txtNode (longer) will hopefully have the new character, textObservable has the old shorter text
+                            if (txtNode.text[u] != oldTextTotal[u + textOffset]) {
+
+                                // case luckily the right css
+                                if (txtNode.css == LOCAL_CSS) {
+                                    diffCount--;
+                                    textOffset++;
+                                    if (diffCount < 1)
+                                        break;
+                                }
+                                // case have to introduce new span
+                                else {
+                                    console.log('not implemented yet');
+                                }
+                            }
+                        }
+                        textOffset += txtNode.text.length;
+                    }
+
+                }
+                // user removed >0 characters -> shorter
+                else if (event.target.innerText.length < oldTextTotal.length) {
+                    console.log("not yet implemented");
+                }
+                // user changed >0 characters -> same length
+                else if (event.target.innerText.length == oldTextTotal.length) {
+                    console.log("not yet implemented");
+                }
+
+                var newInnerHtml = "";
+                textNodes.forEach(function (txtN) {
+                    newInnerHtml += '<span class="label ' + txtN.css + '">' + txtN.text + '</span>';
+                });
+
+                event.target.innerHTML = newInnerHtml;
+
+                selection.removeAllRanges();
+                var range = document.createRange();
+
+                range.setStart(event.target.firstChild.firstChild, anchorOffset);
+                range.setEnd(event.target.firstChild.firstChild, focusOffset);
+                selection.addRange(range);
+
             });
         },
         update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
-            var value = valueAccessor();
-            var unWrappedValue = ko.unwrap(value);
-            element.innerText = unWrappedValue != null ? unWrappedValue : "";
+            // get diff between textObservable &  element.innerText -> this is written by another user
+            // wrap this with custom span
+            // -> set htmlObservable & element.innerHTML with new findings
+//            var textObservable = valueAccessor().text;
+//            var htmlObservable = valueAccessor().html;
+
+//            htmlObservable('<span class="label label-warning">' + (textObservable() != null ? textObservable() : "") + '</span>');
+
+//            element.innerHTML = htmlObservable();
         }
     };
+
+    function transformToHTML(plainText, htmlText) {
+        return null;
+    }
 
     ko.applyBindings(configView, document.getElementById('config'));
     ko.applyBindings(view, document.getElementById('mainView'));

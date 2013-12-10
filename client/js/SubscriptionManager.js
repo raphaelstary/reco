@@ -1,6 +1,5 @@
 define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/MergeConstant',
-    'constants/NotificationConstant', 'lib/knockout', 'TextToken', 'utils/generateId'], function (InputConstant,
-    HistoryConstant, MergeConstant, NotificationConstant, ko, TextToken, generateId) {
+    'constants/NotificationConstant', 'lib/knockout', 'TextToken', 'utils/generateId'], function (InputConstant, HistoryConstant, MergeConstant, NotificationConstant, ko, TextToken, generateId) {
     function SubscriptionManager(view, configView, connector, brain, urlJuggler, urlParams, generateIdFn, history, historyManager) {
         this.view = view;
         this.configView = configView;
@@ -89,31 +88,7 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
     SubscriptionManager.prototype.handleDynamicInputChangeOnlyByUser = function (field, key) {
         var self = this;
         field.addEventListener('keyup', function (event) {
-
-            //is multi merge
-            if (self.configView.merge() === MergeConstant.MULTI) {
-                var valuesConcat = "";
-
-                var noActiveToken = true;
-
-                ko.utils.arrayForEach(self.view[key + InputConstant.VALUES_POSTFIX](), function (valueObj) {
-                    if (valueObj.active()) {
-                        valueObj.value(event.target.value);
-                        noActiveToken = false;
-                    }
-
-                    valuesConcat += valueObj.value();
-                });
-
-                if (noActiveToken) {
-                    self.view[key + InputConstant.VALUES_POSTFIX].push(new TextToken(generateId(), event.target.value, true));
-                    valuesConcat = event.target.value;
-                }
-                self._newValueFromUser(key, valuesConcat, ko.toJSON(self.view[key + InputConstant.VALUES_POSTFIX]()));
-
-            } else { //normal everything else
-                self._newValueFromUser(key, event.target.value);
-            }
+            self._newValueFromUser(key, event.target.value);
         });
     };
 

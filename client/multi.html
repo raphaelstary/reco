@@ -46,6 +46,19 @@
         </fieldset>
     </form>
 </div>
+<script>
+    var selection = window.getSelection();
+    selection.removeAllRanges();
+    var range = document.createRange();
+    var startPar = document.getElementById('thehelp').firstChild.firstChild;
+    var endLi = document.getElementById('thehelp').firstChild.firstChild;
+
+    //                    document.getElementById('thehelp').focus();
+
+    range.setStart(startPar,5);
+    range.setEnd(endLi,5);
+    selection.addRange(range);
+</script>
 
 <script src="/socket.io/socket.io.js"></script>
 <script data-main="js/multi" src="js/lib/require.js"></script>

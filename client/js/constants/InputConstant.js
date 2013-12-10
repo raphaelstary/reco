@@ -3,6 +3,6 @@ define(function () {
         PREFIX: 'input',
         DISABLED_POSTFIX: 'Disabled',
         SELECTED_POSTFIX: 'Selected',
-        VALUES_POSTFIX: 'Values'
+        EDITABLE_POSTFIX: 'Editable'
     };
 });
