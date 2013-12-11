@@ -43,18 +43,20 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
 
     var view = new DynamicViewModel(inputIds, history, configView.history(), configView.merge());
 
+    var isUserUpdate = false;
     ko.bindingHandlers.contentEditable = {
         init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
             var textObservable = valueAccessor().text;
             var htmlObservable = valueAccessor().html;
 
             element.addEventListener('keyup', function (event) {
-                if (event.target.innerText == textObservable()) //todo check if even useful
+                if (event.target.textContent == textObservable()) //todo check if even useful
                     return;
 
                 var selection = window.getSelection();
                 var anchorOffset = selection.anchorOffset;
                 var focusOffset = selection.focusOffset;
+                var selectedNode = 0;
 
                 var children = event.target.children;
                 var textNodes = [];
@@ -65,15 +67,19 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
                 }
 
                 // if it's the 1st character help with init
-                if (textNodes.length == 0 && event.target.innerText.length > 0)
-                    textNodes.push({css: LOCAL_CSS, text: event.target.innerText});
+                if (textNodes.length == 0 && event.target.textContent.length > 0)
+                    textNodes.push({css: LOCAL_CSS, text: event.target.textContent});
 
                 var oldTextTotal = textObservable() != null ? textObservable() : "";
 
+                console.log("old: " + textObservable());
+                console.log("new: " + event.target.textContent);
+
                 // user added >0 characters -> longer
-                if (event.target.innerText.length > oldTextTotal.length) {
+                if (event.target.textContent.length > oldTextTotal.length) {
                     var diffCount = event.target.textContent.length - oldTextTotal.length;
                     var textOffset = 0;
+                    var diffFound = 0;
 
                     for (i = 0; i < textNodes.length; i++) {
                         var txtNode = textNodes[i];
@@ -81,32 +87,49 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
                         for (var u = 0; u < txtNode.text.length; u++) {
 
                             // txtNode (longer) will hopefully have the new character, textObservable has the old shorter text
-                            if (txtNode.text[u] != oldTextTotal[u + textOffset]) {
+                            if (txtNode.text[u] != oldTextTotal[u + textOffset - diffFound]) { //todo als letztes diffFound && check wie indexoutofbound bei old text
 
                                 // case luckily the right css
                                 if (txtNode.css == LOCAL_CSS) {
                                     diffCount--;
-                                    textOffset++;
+//                                    textOffset++;
+                                    diffFound++;
+                                    selectedNode = i;
                                     if (diffCount < 1)
                                         break;
                                 }
                                 // case have to introduce new span
                                 else {
-                                    console.log('not implemented yet');
+                                    var newTxtNode = {css: LOCAL_CSS, text: txtNode.text[u]};
+                                    var partOneOldTextNode = {css: txtNode.css, text: txtNode.text.substring(0, u)};
+                                    var partTwoOldTextNode = {css: txtNode.css, text: txtNode.text.substring(u + 1)};
+
+                                    textNodes.splice(i, 1, partOneOldTextNode, newTxtNode, partTwoOldTextNode);
+                                    i++;
+                                    selectedNode = i;
+                                    anchorOffset = 1;
+                                    focusOffset = 1;
+                                    diffCount--;
+//                                    textOffset++;
+                                    diffFound++;
+                                    break;
                                 }
                             }
                         }
                         textOffset += txtNode.text.length;
+
+                        if (diffCount < 1)
+                            break;
                     }
 
                 }
                 // user removed >0 characters -> shorter
-                else if (event.target.innerText.length < oldTextTotal.length) {
-                    console.log("not yet implemented");
+                else if (event.target.textContent.length < oldTextTotal.length) {
+                    console.log("not yet implemented: shorter");
                 }
                 // user changed >0 characters -> same length
-                else if (event.target.innerText.length == oldTextTotal.length) {
-                    console.log("not yet implemented");
+                else if (event.target.textContent.length == oldTextTotal.length) {
+                    console.log("not yet implemented: same length");
                 }
 
                 var newInnerHtml = "";
@@ -119,22 +142,33 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
                 selection.removeAllRanges();
                 var range = document.createRange();
 
-                range.setStart(event.target.firstChild.firstChild, anchorOffset);
-                range.setEnd(event.target.firstChild.firstChild, focusOffset);
+                range.setStart(event.target.children[selectedNode].firstChild, anchorOffset);
+                range.setEnd(event.target.children[selectedNode].firstChild, focusOffset);
                 selection.addRange(range);
 
+                isUserUpdate = true;
+
+                textObservable(event.target.textContent);
+                console.log("txt observable: " + textObservable());
+
+                htmlObservable(event.target.innerHTML);
+                console.log("html observable: " + htmlObservable());
             });
         },
         update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
-            // get diff between textObservable &  element.innerText -> this is written by another user
+            if (isUserUpdate) {
+                isUserUpdate = false;
+                return;
+            }
+            // get diff between textObservable &  element.textContent -> this is written by another user
             // wrap this with custom span
             // -> set htmlObservable & element.innerHTML with new findings
-//            var textObservable = valueAccessor().text;
-//            var htmlObservable = valueAccessor().html;
+            var textObservable = valueAccessor().text;
+            var htmlObservable = valueAccessor().html;
 
-//            htmlObservable('<span class="label label-warning">' + (textObservable() != null ? textObservable() : "") + '</span>');
+            htmlObservable(textObservable() != null ? '<span class="label label-warning">' + textObservable() + '</span>' : "");
 
-//            element.innerHTML = htmlObservable();
+            element.innerHTML = htmlObservable();
         }
     };
 
