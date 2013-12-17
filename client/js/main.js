@@ -2,9 +2,7 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
     'constants/HistoryConstant', 'constants/NotificationConstant', 'view/ConfigViewModel', 'view/DynamicViewModel',
     'utils/getValues', 'utils/parseUrlParams', 'UrlJuggler', 'utils/generateId', 'constants/InputConstant', 'App',
     'ConnectionManager', 'HistoryManager', 'SubscriptionManager',
-    'lib/domReady'], function (ko, Connector, Brain, History, Messenger, MergeConstant, HistoryConstant,
-        NotificationConstant, ConfigViewModel, DynamicViewModel, getValues, parseUrlParams, UrlJuggler, generateId,
-        InputConstant, App, ConnectionManager, HistoryManager, SubscriptionManager) {
+    'lib/domReady'], function (ko, Connector, Brain, History, Messenger, MergeConstant, HistoryConstant, NotificationConstant, ConfigViewModel, DynamicViewModel, getValues, parseUrlParams, UrlJuggler, generateId, InputConstant, App, ConnectionManager, HistoryManager, SubscriptionManager) {
 
     var URL = location.origin;
     var LOCAL_CSS = "label-info";
@@ -45,7 +43,7 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
 
     var isUserUpdate = false;
     ko.bindingHandlers.contentEditable = {
-        init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+        init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
             var textObservable = valueAccessor().text;
             var htmlObservable = valueAccessor().html;
 
@@ -57,6 +55,7 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
                 var anchorOffset = selection.anchorOffset;
                 var focusOffset = selection.focusOffset;
                 var selectedNode = 0;
+                var updateDom = true;
 
                 var children = event.target.children;
                 var textNodes = [];
@@ -71,6 +70,7 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
                     textNodes.push({css: LOCAL_CSS, text: event.target.textContent});
 
                 var oldTextTotal = textObservable() != null ? textObservable() : "";
+                var oldHtml = htmlObservable() != null ? htmlObservable() : "";
 
                 console.log("old: " + textObservable());
                 console.log("new: " + event.target.textContent);
@@ -84,15 +84,21 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
                     for (i = 0; i < textNodes.length; i++) {
                         var txtNode = textNodes[i];
 
+                        var newNodeStartIndex;
+                        var newNodeEndIndex;
+                        var newTxtNode;
+                        var partOneOldTextNode;
+                        var partTwoOldTextNode;
+                        var creatingNewTxtNode = false;
+
                         for (var u = 0; u < txtNode.text.length; u++) {
 
                             // txtNode (longer) will hopefully have the new character, textObservable has the old shorter text
-                            if (txtNode.text[u] != oldTextTotal[u + textOffset - diffFound]) { //todo als letztes diffFound && check wie indexoutofbound bei old text
+                            if (txtNode.text[u] != oldTextTotal[u + textOffset - diffFound]) {
 
                                 // case luckily the right css
                                 if (txtNode.css == LOCAL_CSS) {
                                     diffCount--;
-//                                    textOffset++;
                                     diffFound++;
                                     selectedNode = i;
                                     if (diffCount < 1)
@@ -100,20 +106,26 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
                                 }
                                 // case have to introduce new span
                                 else {
-                                    var newTxtNode = {css: LOCAL_CSS, text: txtNode.text[u]};
-                                    var partOneOldTextNode = {css: txtNode.css, text: txtNode.text.substring(0, u)};
-                                    var partTwoOldTextNode = {css: txtNode.css, text: txtNode.text.substring(u + 1)};
+                                    if (newTxtNode == null) {
+                                        // create initial temp node
+                                        newTxtNode = {css: LOCAL_CSS, text: txtNode.text[u]};
+                                        creatingNewTxtNode = true;
+                                        newNodeStartIndex = u;
+                                    } else {
+                                        // add next character to temp node buffer
+                                        newTxtNode.text += txtNode.text[u];
+                                    }
 
-                                    textNodes.splice(i, 1, partOneOldTextNode, newTxtNode, partTwoOldTextNode);
-                                    i++;
-                                    selectedNode = i;
-                                    anchorOffset = 1;
-                                    focusOffset = 1;
+
                                     diffCount--;
-//                                    textOffset++;
                                     diffFound++;
-                                    break;
+                                    if (diffCount < 1) {
+                                        insertNewTextNode(1);
+                                        break;
+                                    }
                                 }
+                            } else {
+                                insertNewTextNode(0)
                             }
                         }
                         textOffset += txtNode.text.length;
@@ -125,26 +137,92 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
                 }
                 // user removed >0 characters -> shorter
                 else if (event.target.textContent.length < oldTextTotal.length) {
-                    console.log("not yet implemented: shorter");
+                    updateDom = false;
                 }
                 // user changed >0 characters -> same length
                 else if (event.target.textContent.length == oldTextTotal.length) {
-                    console.log("not yet implemented: same length");
+                    updateDom = false;
+                    var oldDomNodes = document.createElement("div");
+                    oldDomNodes.innerHTML = htmlObservable();
+                    var oldNodes = [];
+                    var oldNode;
+                    for (var x = 0; x < oldDomNodes.children.length; x++) {
+                        oldNode = oldDomNodes.children[i];
+                        oldNodes.push({css: node.classList[1], text: node.textContent});
+                    }
+
+                    var textNodesOffset = 0;
+                    for (var y = 0; y < textNodes.length; y++) {
+                        var currTxtNode = textNodes[y + textNodesOffset];
+                        if (currTxtNode.css != LOCAL_CSS) {
+                            for (var v = 0; v < currTxtNode.text.length; v++) {
+
+                                if (currTxtNode.text[v] != oldNodes[y].text[v]) {
+
+                                    newTxtNode = {css: LOCAL_CSS, text: currTxtNode.text[v]};
+                                    partOneOldTextNode = {css: currTxtNode.css, text: currTxtNode.text.substring(0, v)};
+                                    partTwoOldTextNode = {css: currTxtNode.css, text: currTxtNode.text.substring(v + 1)};
+
+                                    if (partOneOldTextNode.text.length < 1 && partTwoOldTextNode.text.length > 0) {
+                                        textNodes.splice(i, 1, newTxtNode, partTwoOldTextNode);
+                                        textNodesOffset++;
+                                    } else if (partTwoOldTextNode.text.length < 1 && partOneOldTextNode.text.length > 0) {
+                                        textNodes.splice(i, 1, partOneOldTextNode, newTxtNode);
+                                        textNodesOffset++;
+                                    } else {
+                                        textNodes.splice(i, 1, partOneOldTextNode, newTxtNode, partTwoOldTextNode);
+                                        textNodesOffset += 2;
+                                    }
+                                    updateDom = true;
+                                }
+                            }
+                        }
+                    }
                 }
 
-                var newInnerHtml = "";
-                textNodes.forEach(function (txtN) {
-                    newInnerHtml += '<span class="label ' + txtN.css + '">' + txtN.text + '</span>';
-                });
+                // remove empty nodes and concatenate nodes with same css class
+                var lastCss = "initial nothing";
 
-                event.target.innerHTML = newInnerHtml;
+                for (var a = 0; a < textNodes.length; a++) {
+                    if (textNodes[a].text.length < 1) {
+                        deleteNode(textNodes[a - 1].text.length);
+                    } else {
+                        if (lastCss == textNodes[a].css) {
+                            var possibleFocus = textNodes[a - 1].text.length;
+                            textNodes[a - 1].text += textNodes[a].text;
+                            deleteNode(possibleFocus);
+                        }
 
-                selection.removeAllRanges();
-                var range = document.createRange();
+                        lastCss = textNodes[a].css;
+                    }
 
-                range.setStart(event.target.children[selectedNode].firstChild, anchorOffset);
-                range.setEnd(event.target.children[selectedNode].firstChild, focusOffset);
-                selection.addRange(range);
+                    function deleteNode(possibleFocus) {
+                        textNodes.splice(a, 1);
+                        selectedNode = a - 1;
+                        anchorOffset = possibleFocus;
+                        focusOffset = possibleFocus;
+                        a--;
+                        updateDom = true;
+                    }
+                }
+
+                if (updateDom) {
+                    var newInnerHtml = "";
+                    textNodes.forEach(function (txtN) {
+                        newInnerHtml += '<span class="label ' + txtN.css + '">' + txtN.text + '</span>';
+                    });
+
+                    event.target.innerHTML = newInnerHtml;
+
+                    if (event.target.children[selectedNode]) {
+                        selection.removeAllRanges();
+                        var range = document.createRange();
+
+                        range.setStart(event.target.children[selectedNode].firstChild, anchorOffset);
+                        range.setEnd(event.target.children[selectedNode].firstChild, focusOffset);
+                        selection.addRange(range);
+                    }
+                }
 
                 isUserUpdate = true;
 
@@ -153,9 +231,41 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
 
                 htmlObservable(event.target.innerHTML);
                 console.log("html observable: " + htmlObservable());
+
+                function insertNewTextNode(indexOffset) {
+                    if (creatingNewTxtNode) {
+                        creatingNewTxtNode = false;
+                        newNodeEndIndex = u + indexOffset;
+
+                        partOneOldTextNode = {css: txtNode.css, text: txtNode.text.substring(0, newNodeStartIndex)};
+                        partTwoOldTextNode = {css: txtNode.css, text: txtNode.text.substring(newNodeEndIndex)};
+
+                        if (partOneOldTextNode.text.length < 1 && partTwoOldTextNode.text.length > 0) {
+                            textNodes.splice(i, 1, newTxtNode, partTwoOldTextNode);
+                        } else if (partTwoOldTextNode.text.length < 1 && partOneOldTextNode.text.length > 0) {
+                            textNodes.splice(i, 1, partOneOldTextNode, newTxtNode);
+                        } else if (partOneOldTextNode.text.length < 1 && partTwoOldTextNode.text.length < 1) {
+                            textNodes.splice(i, 1, newTxtNode);
+                        } else {
+                            textNodes.splice(i, 1, partOneOldTextNode, newTxtNode, partTwoOldTextNode);
+                        }
+
+                        i++;
+                        selectedNode = i;
+                        if (newTxtNode.text.length > 1) {
+                            anchorOffset = newTxtNode.text.length;
+                            focusOffset = newTxtNode.text.length;
+                        } else {
+                            anchorOffset = 1;
+                            focusOffset = 1;
+                        }
+
+                        newTxtNode = null;
+                    }
+                }
             });
         },
-        update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+        update: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
             if (isUserUpdate) {
                 isUserUpdate = false;
                 return;
