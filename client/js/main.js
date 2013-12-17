@@ -56,11 +56,12 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
                 var focusOffset = selection.focusOffset;
                 var selectedNode = 0;
                 var updateDom = true;
+                var u, i;
 
                 var children = event.target.children;
                 var textNodes = [];
                 var node;
-                for (var i = 0; i < children.length; i++) {
+                for (i = 0; i < children.length; i++) {
                     node = children[i];
                     textNodes.push({css: node.classList[1], text: node.textContent});
                 }
@@ -91,7 +92,7 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
                         var partTwoOldTextNode;
                         var creatingNewTxtNode = false;
 
-                        for (var u = 0; u < txtNode.text.length; u++) {
+                        for (u = 0; u < txtNode.text.length; u++) {
 
                             // txtNode (longer) will hopefully have the new character, textObservable has the old shorter text
                             if (txtNode.text[u] != oldTextTotal[u + textOffset - diffFound]) {
@@ -145,34 +146,40 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
                     var oldDomNodes = document.createElement("div");
                     oldDomNodes.innerHTML = htmlObservable();
                     var oldNodes = [];
-                    var oldNode;
-                    for (var x = 0; x < oldDomNodes.children.length; x++) {
-                        oldNode = oldDomNodes.children[i];
-                        oldNodes.push({css: node.classList[1], text: node.textContent});
-                    }
+                    for (i = 0; i < oldDomNodes.children.length; i++)
+                        oldNodes.push({css: oldDomNodes.children[i].classList[1], text: oldDomNodes.children[i].textContent});
 
                     var textNodesOffset = 0;
-                    for (var y = 0; y < textNodes.length; y++) {
-                        var currTxtNode = textNodes[y + textNodesOffset];
+                    for (i = 0; i < textNodes.length; i++) {
+                        var currTxtNode = textNodes[i];
                         if (currTxtNode.css != LOCAL_CSS) {
-                            for (var v = 0; v < currTxtNode.text.length; v++) {
+                            for (u = 0; u < currTxtNode.text.length; u++) {
 
-                                if (currTxtNode.text[v] != oldNodes[y].text[v]) {
+                                if (currTxtNode.text[u] != oldNodes[i - textNodesOffset].text[u]) {
 
-                                    newTxtNode = {css: LOCAL_CSS, text: currTxtNode.text[v]};
-                                    partOneOldTextNode = {css: currTxtNode.css, text: currTxtNode.text.substring(0, v)};
-                                    partTwoOldTextNode = {css: currTxtNode.css, text: currTxtNode.text.substring(v + 1)};
+                                    newTxtNode = {css: LOCAL_CSS, text: currTxtNode.text[u]};
+                                    partOneOldTextNode = {css: currTxtNode.css, text: currTxtNode.text.substring(0, u)};
+                                    partTwoOldTextNode = {css: currTxtNode.css, text: currTxtNode.text.substring(u + 1)};
 
                                     if (partOneOldTextNode.text.length < 1 && partTwoOldTextNode.text.length > 0) {
                                         textNodes.splice(i, 1, newTxtNode, partTwoOldTextNode);
+                                        selectedNode = i;
                                         textNodesOffset++;
+                                        i++;
                                     } else if (partTwoOldTextNode.text.length < 1 && partOneOldTextNode.text.length > 0) {
                                         textNodes.splice(i, 1, partOneOldTextNode, newTxtNode);
+                                        selectedNode = i + 1;
                                         textNodesOffset++;
+                                        i++;
                                     } else {
                                         textNodes.splice(i, 1, partOneOldTextNode, newTxtNode, partTwoOldTextNode);
+                                        selectedNode = i + 1;
                                         textNodesOffset += 2;
+                                        i += 2;
                                     }
+                                    anchorOffset = newTxtNode.text.length;
+                                    focusOffset = newTxtNode.text.length;
+
                                     updateDom = true;
                                 }
                             }
