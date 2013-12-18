@@ -4,6 +4,13 @@ define(['constants/CssConstant'], function (CssConstant) {
         if (domElem.textContent == textObservable())
             return;
 
+        if (textObservable() != "" && domElem.textContent == "") {
+            domElem.innerHTML = "";
+            htmlObservable("");
+            textObservable("");
+            return;
+        }
+
         var selectedNode, anchorOffset, focusOffset, updateDom = false;
 
         var textNodes = [];
@@ -26,36 +33,45 @@ define(['constants/CssConstant'], function (CssConstant) {
             for (i = 0; i < oldDomNodes.children.length; i++)
                 oldNodes.push({css: oldDomNodes.children[i].classList[1], text: oldDomNodes.children[i].textContent});
 
-            for (i = 0; i < textNodes.length; i++) {
-                var currTxtNode = textNodes[i];
-                if (currTxtNode.css != homeCss && currTxtNode.text.length >= oldNodes[i].text.length) {
-                    for (var u = 0; u < currTxtNode.text.length; u++) {
+            if (oldNodes.length == 0 && textNodes.length == 1) {
+                textNodes[0].css = CssConstant.LOCAL_CSS;
+                selectedNode = 0;
+                anchorOffset = domElem.textContent.length;
+                focusOffset = domElem.textContent.length;
+                updateDom = true;
+            } else {
 
-                        if (currTxtNode.text[u] != oldNodes[i].text[u]) {
+                for (i = 0; i < textNodes.length; i++) {
+                    var currTxtNode = textNodes[i];
+                    if (currTxtNode.css != homeCss && currTxtNode.text.length >= oldNodes[i].text.length) {
+                        for (var u = 0; u < currTxtNode.text.length; u++) {
 
-                            var newTxtNode = {css: homeCss, text: currTxtNode.text[u]};
-                            var partOneOldTextNode = {css: currTxtNode.css, text: currTxtNode.text.substring(0, u)};
-                            var partTwoOldTextNode = {css: currTxtNode.css, text: currTxtNode.text.substring(u + 1)};
+                            if (currTxtNode.text[u] != oldNodes[i].text[u]) {
 
-                            if (partOneOldTextNode.text.length < 1 && partTwoOldTextNode.text.length > 0) {
-                                textNodes.splice(i, 1, newTxtNode, partTwoOldTextNode);
-                                selectedNode = i;
-                            } else if (partTwoOldTextNode.text.length < 1 && partOneOldTextNode.text.length > 0) {
-                                textNodes.splice(i, 1, partOneOldTextNode, newTxtNode);
-                                selectedNode = i + 1;
-                            } else {
-                                textNodes.splice(i, 1, partOneOldTextNode, newTxtNode, partTwoOldTextNode);
-                                selectedNode = i + 1;
+                                var newTxtNode = {css: homeCss, text: currTxtNode.text[u]};
+                                var partOneOldTextNode = {css: currTxtNode.css, text: currTxtNode.text.substring(0, u)};
+                                var partTwoOldTextNode = {css: currTxtNode.css, text: currTxtNode.text.substring(u + 1)};
+
+                                if (partOneOldTextNode.text.length < 1 && partTwoOldTextNode.text.length > 0) {
+                                    textNodes.splice(i, 1, newTxtNode, partTwoOldTextNode);
+                                    selectedNode = i;
+                                } else if (partTwoOldTextNode.text.length < 1 && partOneOldTextNode.text.length > 0) {
+                                    textNodes.splice(i, 1, partOneOldTextNode, newTxtNode);
+                                    selectedNode = i + 1;
+                                } else {
+                                    textNodes.splice(i, 1, partOneOldTextNode, newTxtNode, partTwoOldTextNode);
+                                    selectedNode = i + 1;
+                                }
+                                anchorOffset = newTxtNode.text.length;
+                                focusOffset = newTxtNode.text.length;
+
+                                updateDom = true;
+                                break;
                             }
-                            anchorOffset = newTxtNode.text.length;
-                            focusOffset = newTxtNode.text.length;
-
-                            updateDom = true;
-                            break;
                         }
+                        if (updateDom)
+                            break;
                     }
-                    if (updateDom)
-                        break;
                 }
             }
         }
@@ -130,6 +146,13 @@ define(['constants/CssConstant'], function (CssConstant) {
                     var htmlObservable = valueAccessor().html;
                     var domElem = element;
                     var homeCss = CssConstant.REMOTE_CSS;
+
+                    if (textObservable() == "" && htmlObservable() != "") {
+                        domElem.innerHTML = "";
+                        htmlObservable("");
+                        isRemoteUpdate = false;
+                        return;
+                    }
 
                     var textNodes = [];
                     for (var i = 0; i < domElem.children.length; i++)
