@@ -48,101 +48,21 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
             var htmlObservable = valueAccessor().html;
 
             element.addEventListener('keyup', function (event) {
-                if (event.target.textContent == textObservable()) //todo check if even useful
+                if (event.target.textContent == textObservable())
                     return;
 
-                var selection = window.getSelection();
-                var anchorOffset = selection.anchorOffset;
-                var focusOffset = selection.focusOffset;
-                var selectedNode = 0;
-                var updateDom = true;
-                var u, i;
+                var selectedNode, anchorOffset, focusOffset, updateDom = false;
 
-                var children = event.target.children;
                 var textNodes = [];
-                var node;
-                for (i = 0; i < children.length; i++) {
-                    node = children[i];
-                    textNodes.push({css: node.classList[1], text: node.textContent});
-                }
+                for (var i = 0; i < event.target.children.length; i++)
+                    textNodes.push({css: event.target.children[i].classList[1], text: event.target.children[i].textContent});
 
                 // if it's the 1st character help with init
                 if (textNodes.length == 0 && event.target.textContent.length > 0)
                     textNodes.push({css: LOCAL_CSS, text: event.target.textContent});
 
-                var oldTextTotal = textObservable() != null ? textObservable() : "";
-                var oldHtml = htmlObservable() != null ? htmlObservable() : "";
+                if (event.target.textContent.length >= (textObservable() != null ? textObservable() : "").length) {
 
-                console.log("old: " + textObservable());
-                console.log("new: " + event.target.textContent);
-
-                // user added >0 characters -> longer
-                if (event.target.textContent.length > oldTextTotal.length) {
-                    var diffCount = event.target.textContent.length - oldTextTotal.length;
-                    var textOffset = 0;
-                    var diffFound = 0;
-
-                    for (i = 0; i < textNodes.length; i++) {
-                        var txtNode = textNodes[i];
-
-                        var newNodeStartIndex;
-                        var newNodeEndIndex;
-                        var newTxtNode;
-                        var partOneOldTextNode;
-                        var partTwoOldTextNode;
-                        var creatingNewTxtNode = false;
-
-                        for (u = 0; u < txtNode.text.length; u++) {
-
-                            // txtNode (longer) will hopefully have the new character, textObservable has the old shorter text
-                            if (txtNode.text[u] != oldTextTotal[u + textOffset - diffFound]) {
-
-                                // case luckily the right css
-                                if (txtNode.css == LOCAL_CSS) {
-                                    diffCount--;
-                                    diffFound++;
-                                    selectedNode = i;
-                                    if (diffCount < 1)
-                                        break;
-                                }
-                                // case have to introduce new span
-                                else {
-                                    if (newTxtNode == null) {
-                                        // create initial temp node
-                                        newTxtNode = {css: LOCAL_CSS, text: txtNode.text[u]};
-                                        creatingNewTxtNode = true;
-                                        newNodeStartIndex = u;
-                                    } else {
-                                        // add next character to temp node buffer
-                                        newTxtNode.text += txtNode.text[u];
-                                    }
-
-
-                                    diffCount--;
-                                    diffFound++;
-                                    if (diffCount < 1) {
-                                        insertNewTextNode(1);
-                                        break;
-                                    }
-                                }
-                            } else {
-                                insertNewTextNode(0)
-                            }
-                        }
-                        textOffset += txtNode.text.length;
-
-                        if (diffCount < 1)
-                            break;
-                    }
-
-                }
-                // user removed >0 characters -> shorter
-                else if (event.target.textContent.length < oldTextTotal.length) {
-                    updateDom = false;
-                }
-                // user changed >0 characters -> same length
-                else if (event.target.textContent.length == oldTextTotal.length) {
-                    updateDom = false;
                     var oldDomNodes = document.createElement("div");
                     oldDomNodes.innerHTML = htmlObservable();
                     var oldNodes = [];
@@ -152,13 +72,13 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
                     for (i = 0; i < textNodes.length; i++) {
                         var currTxtNode = textNodes[i];
                         if (currTxtNode.css != LOCAL_CSS) {
-                            for (u = 0; u < currTxtNode.text.length; u++) {
+                            for (var u = 0; u < currTxtNode.text.length; u++) {
 
                                 if (currTxtNode.text[u] != oldNodes[i].text[u]) {
 
-                                    newTxtNode = {css: LOCAL_CSS, text: currTxtNode.text[u]};
-                                    partOneOldTextNode = {css: currTxtNode.css, text: currTxtNode.text.substring(0, u)};
-                                    partTwoOldTextNode = {css: currTxtNode.css, text: currTxtNode.text.substring(u + 1)};
+                                    var newTxtNode = {css: LOCAL_CSS, text: currTxtNode.text[u]};
+                                    var partOneOldTextNode = {css: currTxtNode.css, text: currTxtNode.text.substring(0, u)};
+                                    var partTwoOldTextNode = {css: currTxtNode.css, text: currTxtNode.text.substring(u + 1)};
 
                                     if (partOneOldTextNode.text.length < 1 && partTwoOldTextNode.text.length > 0) {
                                         textNodes.splice(i, 1, newTxtNode, partTwoOldTextNode);
@@ -218,54 +138,20 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
                     event.target.innerHTML = newInnerHtml;
 
                     if (event.target.children[selectedNode]) {
-                        selection.removeAllRanges();
+                        window.getSelection().removeAllRanges();
                         var range = document.createRange();
 
                         range.setStart(event.target.children[selectedNode].firstChild, anchorOffset);
                         range.setEnd(event.target.children[selectedNode].firstChild, focusOffset);
-                        selection.addRange(range);
+                        window.getSelection().addRange(range);
                     }
                 }
 
                 isUserUpdate = true;
 
                 textObservable(event.target.textContent);
-                console.log("txt observable: " + textObservable());
 
                 htmlObservable(event.target.innerHTML);
-                console.log("html observable: " + htmlObservable());
-
-                function insertNewTextNode(indexOffset) {
-                    if (creatingNewTxtNode) {
-                        creatingNewTxtNode = false;
-                        newNodeEndIndex = u + indexOffset;
-
-                        partOneOldTextNode = {css: txtNode.css, text: txtNode.text.substring(0, newNodeStartIndex)};
-                        partTwoOldTextNode = {css: txtNode.css, text: txtNode.text.substring(newNodeEndIndex)};
-
-                        if (partOneOldTextNode.text.length < 1 && partTwoOldTextNode.text.length > 0) {
-                            textNodes.splice(i, 1, newTxtNode, partTwoOldTextNode);
-                        } else if (partTwoOldTextNode.text.length < 1 && partOneOldTextNode.text.length > 0) {
-                            textNodes.splice(i, 1, partOneOldTextNode, newTxtNode);
-                        } else if (partOneOldTextNode.text.length < 1 && partTwoOldTextNode.text.length < 1) {
-                            textNodes.splice(i, 1, newTxtNode);
-                        } else {
-                            textNodes.splice(i, 1, partOneOldTextNode, newTxtNode, partTwoOldTextNode);
-                        }
-
-                        i++;
-                        selectedNode = i;
-                        if (newTxtNode.text.length > 1) {
-                            anchorOffset = newTxtNode.text.length;
-                            focusOffset = newTxtNode.text.length;
-                        } else {
-                            anchorOffset = 1;
-                            focusOffset = 1;
-                        }
-
-                        newTxtNode = null;
-                    }
-                }
             });
         },
         update: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
