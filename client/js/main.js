@@ -71,7 +71,7 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
 
                     for (i = 0; i < textNodes.length; i++) {
                         var currTxtNode = textNodes[i];
-                        if (currTxtNode.css != LOCAL_CSS) {
+                        if (currTxtNode.css != LOCAL_CSS && currTxtNode.text.length >= oldNodes[i].text.length) {
                             for (var u = 0; u < currTxtNode.text.length; u++) {
 
                                 if (currTxtNode.text[u] != oldNodes[i].text[u]) {
