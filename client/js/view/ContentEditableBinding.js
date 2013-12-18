@@ -1,4 +1,5 @@
-define(function () {
+define(['constants/CssConstant'], function (CssConstant) {
+
     function updateEditable(domElem, textObservable, htmlObservable, homeCss, window, document) {
         if (domElem.textContent == textObservable())
             return;
@@ -116,7 +117,7 @@ define(function () {
                 var textObservable = valueAccessor().text;
                 var htmlObservable = valueAccessor().html;
                 isUserUpdate = true;
-                updateEditable(event.target, textObservable, htmlObservable, LOCAL_CSS, window, document);
+                updateEditable(event.target, textObservable, htmlObservable, CssConstant.LOCAL_CSS, window, document);
                 isUserUpdate = false;
             });
 
@@ -128,7 +129,7 @@ define(function () {
                     var textObservable = valueAccessor().text;
                     var htmlObservable = valueAccessor().html;
                     var domElem = element;
-                    var homeCss = REMOTE_CSS;
+                    var homeCss = CssConstant.REMOTE_CSS;
 
                     var textNodes = [];
                     for (var i = 0; i < domElem.children.length; i++)
@@ -190,7 +191,7 @@ define(function () {
                             }
                             if (textNodes.length - 1 == i) {
                                 // simplePushChange = true;
-                                textNodes.push({css: REMOTE_CSS, text: pureText});
+                                textNodes.push({css: CssConstant.REMOTE_CSS, text: pureText});
                                 break;
                             }
                         }

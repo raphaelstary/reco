@@ -1,6 +1,12 @@
-require(['lib/knockout', 'lib/domReady'], function (ko, require) {
+require(['require', 'lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constants/MergeConstant',
+    'constants/HistoryConstant', 'constants/NotificationConstant', 'view/ConfigViewModel', 'view/DynamicViewModel',
+    'utils/getValues', 'utils/parseUrlParams', 'UrlJuggler', 'utils/generateId', 'constants/InputConstant', 'App',
+    'ConnectionManager', 'HistoryManager', 'SubscriptionManager', 'view/ContentEditableBinding',
+    'lib/domReady'], function (require) {
 
-    var ContentEditableBinding = require('view/ContentEditableBinding'),
+    require('lib/domReady');
+    var ko = require('lib/knockout'),
+        ContentEditableBinding = require('view/ContentEditableBinding'),
         Connector = require('Connector'),
         Brain = require('Brain'),
         History = require('History'),
@@ -21,8 +27,6 @@ require(['lib/knockout', 'lib/domReady'], function (ko, require) {
         SubscriptionManager = require('SubscriptionManager');
 
     var URL = location.origin;
-    var LOCAL_CSS = "label-info";
-    var REMOTE_CSS = "label-warning";
 
     var connector = new Connector();
     var brain = new Brain();
