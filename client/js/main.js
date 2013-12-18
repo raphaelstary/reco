@@ -44,10 +44,11 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
     var isUserUpdate = false;
     ko.bindingHandlers.contentEditable = {
         init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
-            var textObservable = valueAccessor().text;
-            var htmlObservable = valueAccessor().html;
 
             element.addEventListener('keyup', function (event) {
+                var textObservable = valueAccessor().text;
+                var htmlObservable = valueAccessor().html;
+
                 if (event.target.textContent == textObservable())
                     return;
 
@@ -58,8 +59,13 @@ require(['lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constant
                     textNodes.push({css: event.target.children[i].classList[1], text: event.target.children[i].textContent});
 
                 // if it's the 1st character help with init
-                if (textNodes.length == 0 && event.target.textContent.length > 0)
+                if (textNodes.length == 0 && event.target.textContent.length > 0) {
                     textNodes.push({css: LOCAL_CSS, text: event.target.textContent});
+                    selectedNode = 0;
+                    anchorOffset = event.target.textContent.length;
+                    focusOffset = event.target.textContent.length;
+                    updateDom = true;
+                }
 
                 if (event.target.textContent.length >= (textObservable() != null ? textObservable() : "").length) {
 
