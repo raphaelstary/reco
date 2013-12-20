@@ -6,7 +6,7 @@ require(['require', 'lib/knockout', 'Connector', 'Brain', 'History', 'Messenger'
 
     require('lib/domReady');
     var ko = require('lib/knockout'),
-        ContentEditableBinding = require('view/ContentEditableBinding'),
+        getContentEditableBinding = require('view/ContentEditableBinding'),
         Connector = require('Connector'),
         Brain = require('Brain'),
         History = require('History'),
@@ -61,16 +61,16 @@ require(['require', 'lib/knockout', 'Connector', 'Brain', 'History', 'Messenger'
 
     var view = new DynamicViewModel(inputIds, history, configView.history(), configView.merge());
 
-    ko.bindingHandlers.contentEditable = ContentEditableBinding;
-
-    ko.applyBindings(configView, document.getElementById('config'));
-    ko.applyBindings(view, document.getElementById('mainView'));
-
     var historyManager = new HistoryManager(history, view);
     var subscriptionManager = new SubscriptionManager(view, configView, connector, brain, urlJuggler, urlParams,
         generateId, history, historyManager);
     var connectionManager = new ConnectionManager(view, configView, brain, historyManager, history);
+    
+    ko.bindingHandlers.contentEditable = getContentEditableBinding(subscriptionManager);
 
+    ko.applyBindings(configView, document.getElementById('config'));
+    ko.applyBindings(view, document.getElementById('mainView'));
+    
     var app = new App(view, configView, connector, subscriptionManager, connectionManager);
     app.setUpInputSubscriptions(inputs);
     app.setUpConnection(URL);

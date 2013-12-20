@@ -18,17 +18,18 @@ define(['constants/CssConstant'], function (CssConstant) {
             textNodes.push({css: domElem.children[i].classList[1], text: domElem.children[i].textContent});
 
         // if it's the 1st character help with init
-        if (textNodes.length == 0 && domElem.textContent.length > 0) {
-            textNodes.push({css: homeCss, text: domElem.textContent});
+        if (textNodes.length == 0 && domElem.textContent.trim().length > 0) {
+            textNodes.push({css: homeCss, text: domElem.textContent.trim()});
             selectedNode = 0;
-            anchorOffset = domElem.textContent.length;
-            focusOffset = domElem.textContent.length;
+            anchorOffset = 1;
+            focusOffset = 1;
             updateDom = true;
 
         } else if (domElem.textContent.length >= (textObservable() != null ? textObservable() : "").length) {
 
             var oldDomNodes = document.createElement("div");
             oldDomNodes.innerHTML = htmlObservable();
+
             var oldNodes = [];
             for (i = 0; i < oldDomNodes.children.length; i++)
                 oldNodes.push({css: oldDomNodes.children[i].classList[1], text: oldDomNodes.children[i].textContent});
@@ -123,143 +124,151 @@ define(['constants/CssConstant'], function (CssConstant) {
         htmlObservable(domElem.innerHTML);
     }
 
-    return {
-        init: function (element, valueAccessor) {
+    function getContentEditableBinding(subscriptionManager) {
+        return {
+            init: function (element, valueAccessor) {
 
-            var isUserUpdate = false;
-            var isRemoteUpdate = false;
+                var isUserUpdate = false;
+                var isRemoteUpdate = false;
 
-            element.addEventListener('keyup', function (event) {
-                var textObservable = valueAccessor().text;
-                var htmlObservable = valueAccessor().html;
-                isUserUpdate = true;
-                updateEditable(event.target, textObservable, htmlObservable, CssConstant.LOCAL_CSS, window, document);
-                isUserUpdate = false;
-            });
+                element.addEventListener('keydown', function (event) {
+                    setTimeout(function () {
+                        var textObservable = valueAccessor().text;
+                        var htmlObservable = valueAccessor().html;
+                        isUserUpdate = true;
+                        updateEditable(event.target, textObservable, htmlObservable, CssConstant.LOCAL_CSS, window, document);
+                        subscriptionManager.handleContentEditable(event.target.id, textObservable(), htmlObservable());
+                        isUserUpdate = false;
+                    }, 0);
 
-            valueAccessor().text.subscribe(function () {
+                });
 
-                if (!isUserUpdate && !isRemoteUpdate) {
-                    isRemoteUpdate = true;
+                valueAccessor().text.subscribe(function () {
 
-                    var textObservable = valueAccessor().text;
-                    var htmlObservable = valueAccessor().html;
-                    var domElem = element;
-                    var homeCss = CssConstant.REMOTE_CSS;
+                    if (!isUserUpdate && !isRemoteUpdate) {
+                        isRemoteUpdate = true;
 
-                    if (textObservable() == "" && htmlObservable() != "") {
-                        domElem.innerHTML = "";
-                        htmlObservable("");
-                        isRemoteUpdate = false;
-                        return;
-                    }
+                        var textObservable = valueAccessor().text;
+                        var htmlObservable = valueAccessor().html;
+                        var domElem = element;
+                        var homeCss = CssConstant.REMOTE_CSS;
 
-                    var textNodes = [];
-                    for (var i = 0; i < domElem.children.length; i++)
-                        textNodes.push({css: domElem.children[i].classList[1], text: domElem.children[i].textContent});
-
-                    // var simplePushChange = false;
-                    var pureText = valueAccessor().text();
-
-                    if (textNodes.length == 0 && pureText.length > 0) {
-                        textNodes.push({css: homeCss, text: pureText});
-
-                    } else {
-
-                        var lowerIndex = 0;
-                        for (i = 0; i < textNodes.length; i++) {
-                            var currElem = textNodes[i];
-                            var stringToCompare = pureText.substring(0, currElem.text.length);
-                            if (stringToCompare == currElem.text) {
-                                pureText = pureText.substring(currElem.text.length);
-                            } else {
-                                lowerIndex = i;
-                                var charsToRemove = 0;
-                                for (var u = textNodes.length - 1; u > lowerIndex; u--) {
-                                    charsToRemove += textNodes[u].text.length;
-                                }
-                                var nodeTextToCompare = pureText.substring(0, pureText.length - charsToRemove);
-
-                                if (currElem.css == homeCss) {
-                                    currElem.text = nodeTextToCompare;
-                                } else {
-                                    if (currElem.text.length <= nodeTextToCompare.length) {
-                                        //split node
-                                        for (var v = 0; v < currElem.text.length; v++) {
-
-                                            if (currElem.text[v] != nodeTextToCompare[v]) {
-
-                                                var newTxtNode = {css: homeCss, text: nodeTextToCompare[v]};
-                                                var partOneOldTextNode = {css: currElem.css, text: nodeTextToCompare.substring(0, v)};
-                                                var partTwoOldTextNode = {css: currElem.css, text: nodeTextToCompare.substring(v + 1)};
-
-                                                if (partOneOldTextNode.text.length < 1 && partTwoOldTextNode.text.length > 0) {
-                                                    textNodes.splice(i, 1, newTxtNode, partTwoOldTextNode);
-                                                } else if (partTwoOldTextNode.text.length < 1 && partOneOldTextNode.text.length > 0) {
-                                                    textNodes.splice(i, 1, partOneOldTextNode, newTxtNode);
-                                                } else {
-                                                    textNodes.splice(i, 1, partOneOldTextNode, newTxtNode, partTwoOldTextNode);
-                                                }
-
-                                                break;
-                                            }
-                                        }
-
-                                    } else {
-                                        currElem.text = nodeTextToCompare;
-                                    }
-                                }
-
-                                break;
-                            }
-                            if (textNodes.length - 1 == i) {
-                                // simplePushChange = true;
-                                textNodes.push({css: CssConstant.REMOTE_CSS, text: pureText});
-                                break;
-                            }
+                        if (textObservable() == "" && htmlObservable() != "") {
+                            domElem.innerHTML = "";
+                            htmlObservable("");
+                            isRemoteUpdate = false;
+                            return;
                         }
-                    }
 
-                    // remove empty nodes and concatenate nodes with same css class
-                    var lastCss = "initial nothing";
+                        var textNodes = [];
+                        for (var i = 0; i < domElem.children.length; i++)
+                            textNodes.push({css: domElem.children[i].classList[1], text: domElem.children[i].textContent});
 
-                    for (var a = 0; a < textNodes.length; a++) {
-                        if (textNodes[a].text.length < 1) {
-                            deleteNode(textNodes[a - 1].text.length);
+                        // var simplePushChange = false;
+                        var pureText = valueAccessor().text();
+
+                        if (textNodes.length == 0 && pureText.length > 0) {
+                            textNodes.push({css: homeCss, text: pureText});
+
                         } else {
-                            if (lastCss == textNodes[a].css) {
-                                var possibleFocus = textNodes[a - 1].text.length;
-                                textNodes[a - 1].text += textNodes[a].text;
-                                deleteNode(possibleFocus);
+
+                            var lowerIndex = 0;
+                            for (i = 0; i < textNodes.length; i++) {
+                                var currElem = textNodes[i];
+                                var stringToCompare = pureText.substring(0, currElem.text.length);
+                                if (stringToCompare == currElem.text) {
+                                    pureText = pureText.substring(currElem.text.length);
+                                } else {
+                                    lowerIndex = i;
+                                    var charsToRemove = 0;
+                                    for (var u = textNodes.length - 1; u > lowerIndex; u--) {
+                                        charsToRemove += textNodes[u].text.length;
+                                    }
+                                    var nodeTextToCompare = pureText.substring(0, pureText.length - charsToRemove);
+
+                                    if (currElem.css == homeCss) {
+                                        currElem.text = nodeTextToCompare;
+                                    } else {
+                                        if (currElem.text.length <= nodeTextToCompare.length) {
+                                            //split node
+                                            for (var v = 0; v < currElem.text.length; v++) {
+
+                                                if (currElem.text[v] != nodeTextToCompare[v] || (nodeTextToCompare[v] == nodeTextToCompare[v + 1] && currElem.text[v + 1] != nodeTextToCompare[v + 1])) {
+
+                                                    var newTxtNode = {css: homeCss, text: nodeTextToCompare[v]};
+                                                    var partOneOldTextNode = {css: currElem.css, text: nodeTextToCompare.substring(0, v)};
+                                                    var partTwoOldTextNode = {css: currElem.css, text: nodeTextToCompare.substring(v + 1)};
+
+                                                    if (partOneOldTextNode.text.length < 1 && partTwoOldTextNode.text.length > 0) {
+                                                        textNodes.splice(i, 1, newTxtNode, partTwoOldTextNode);
+                                                    } else if (partTwoOldTextNode.text.length < 1 && partOneOldTextNode.text.length > 0) {
+                                                        textNodes.splice(i, 1, partOneOldTextNode, newTxtNode);
+                                                    } else {
+                                                        textNodes.splice(i, 1, partOneOldTextNode, newTxtNode, partTwoOldTextNode);
+                                                    }
+
+                                                    break;
+                                                }
+                                            }
+
+                                        } else {
+                                            currElem.text = nodeTextToCompare;
+                                        }
+                                    }
+
+                                    break;
+                                }
+                                if (textNodes.length - 1 == i) {
+                                    // simplePushChange = true;
+                                    textNodes.push({css: CssConstant.REMOTE_CSS, text: pureText});
+                                    break;
+                                }
+                            }
+                        }
+
+                        // remove empty nodes and concatenate nodes with same css class
+                        var lastCss = "initial nothing";
+
+                        for (var a = 0; a < textNodes.length; a++) {
+                            if (textNodes[a].text.length < 1) {
+                                deleteNode(textNodes[a - 1].text.length);
+                            } else {
+                                if (lastCss == textNodes[a].css) {
+                                    var possibleFocus = textNodes[a - 1].text.length;
+                                    textNodes[a - 1].text += textNodes[a].text;
+                                    deleteNode(possibleFocus);
+                                }
+
+                                lastCss = textNodes[a].css;
                             }
 
-                            lastCss = textNodes[a].css;
+                            function deleteNode(possibleFocus) {
+                                textNodes.splice(a, 1);
+                                a--;
+                            }
                         }
 
-                        function deleteNode(possibleFocus) {
-                            textNodes.splice(a, 1);
-                            a--;
-                        }
+                        var newInnerHtml = "";
+                        textNodes.forEach(function (txtN) {
+                            newInnerHtml += '<span class="label ' + txtN.css + '">' + txtN.text + '</span>';
+                        });
+
+                        domElem.innerHTML = newInnerHtml;
+
+                        textObservable(domElem.textContent);
+                        htmlObservable(domElem.innerHTML);
+
+                        isRemoteUpdate = false;
                     }
-
-                    var newInnerHtml = "";
-                    textNodes.forEach(function (txtN) {
-                        newInnerHtml += '<span class="label ' + txtN.css + '">' + txtN.text + '</span>';
-                    });
-
-                    domElem.innerHTML = newInnerHtml;
-
-                    textObservable(domElem.textContent);
-                    htmlObservable(domElem.innerHTML);
-
-                    isRemoteUpdate = false;
-                }
-            });
-        }
+                });
+            }
 //        update: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
 // todo: file knockout issue, because update function only gets fired once or twice (maybe because of 2 observables??),
 // after content editable div is in use update doesn't get fired anymore
 // -> update fn is a subscription fn on an observable in init
 //        }
-    };
+        };
+    }
+
+    return getContentEditableBinding;
 });

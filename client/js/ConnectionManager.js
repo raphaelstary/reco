@@ -13,7 +13,7 @@ define(function () {
 
     ConnectionManager.prototype.handleUpdate = function (data) {
         this.history.add(data);
-        this.view.update(data.field, data.value, data.multiValues);
+        this.view.update(data.field, data.value, data.htmlValue);
 
         this.view.users(this.history.getAllUsers());
         this.view.history(this.historyManager.getHistoryData(this.configView.history()));

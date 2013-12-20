@@ -87,19 +87,25 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
 
     SubscriptionManager.prototype.handleDynamicInputChangeOnlyByUser = function (field, key) {
         var self = this;
-        field.addEventListener('keyup', function (event) {
-            self._newValueFromUser(key, event.target.value);
+        field.addEventListener('keydown', function (event) {
+            setTimeout(function () {
+                self._newValueFromUser(key, event.target.value);
+            }, 0);
         });
     };
 
-    SubscriptionManager.prototype._newValueFromUser = function (key, value, multiList) {
+    SubscriptionManager.prototype.handleContentEditable = function (key, value, htmlValue) {
+        this._newValueFromUser(key.substring(0, key.length - InputConstant.EDITABLE_POSTFIX.length), value, htmlValue);
+    };
+
+    SubscriptionManager.prototype._newValueFromUser = function (key, value, htmlValue) {
         var self = this;
         var data = {
             user: self.brain.userId,
             id: self.generateId(),
             field: key,
             value: value,
-            multiValues: multiList
+            htmlValue: self.view[key + InputConstant.EDITABLE_POSTFIX]
         };
 
         self.history.add(data);
