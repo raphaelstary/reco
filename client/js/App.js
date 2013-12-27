@@ -19,6 +19,7 @@ define(function () {
         this.configView.notification.subscribe(this.subscriptionManager.handleNotification.bind(this.subscriptionManager));
 
         this.configView.user.subscribe(this.subscriptionManager.handleUser.bind(this.subscriptionManager));
+        this.configView.cssClass.subscribe(this.subscriptionManager.handleCssClass.bind(this.subscriptionManager));
 
         Object.getOwnPropertyNames(this.view).forEach(
             this.subscriptionManager.handleAllDynamicInputChange.bind(this.subscriptionManager));

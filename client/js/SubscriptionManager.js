@@ -54,7 +54,17 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
         this.urlParams['user'] = newVal;
         this.urlJuggler.updateParams(this.urlParams);
         this.brain.userId = newVal;
-        this.configView.user(newVal);
+//        this.configView.user(newVal); wtf??
+    };
+
+    SubscriptionManager.prototype.handleCssClass = function (newVal) {
+        if (newVal === undefined || newVal === null || newVal.trim() === '') {
+            newVal = 'label-warning';
+        }
+
+        this.urlParams['css'] = newVal;
+        this.urlJuggler.updateParams(this.urlParams);
+        this.brain.cssClass = newVal;
     };
 
     SubscriptionManager.prototype.isSelectVar = function (key) {
@@ -105,7 +115,7 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
             id: self.generateId(),
             field: key,
             value: value,
-            htmlValue: self.view[key + InputConstant.EDITABLE_POSTFIX]
+            htmlValue: htmlValue
         };
 
         self.history.add(data);

@@ -23,7 +23,8 @@ define(['lib/knockout', 'TextToken', 'constants/HistoryConstant', 'constants/Mer
 
     DynamicViewModel.prototype.update = function (fieldId, value, markupValue) {
         this[fieldId](value);
-        //this[fieldId + InputConstant.EDITABLE_POSTFIX](markupValue);
+        if (markupValue != null && markupValue.length > 0)
+            this[fieldId + InputConstant.EDITABLE_POSTFIX](markupValue);
     };
 
     DynamicViewModel.prototype.lock = function (fieldId) {

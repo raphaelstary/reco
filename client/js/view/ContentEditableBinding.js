@@ -1,14 +1,17 @@
-define(['constants/CssConstant'], function (CssConstant) {
+define(function () {
+    var selectionId, selectionOffset;
 
     function updateEditable(domElem, textObservable, htmlObservable, homeCss, window, document) {
-        if (domElem.textContent == textObservable())
-            return;
+        if (domElem.textContent == textObservable()) {
+//            selectionOffset = window.getSelection().anchorOffset;
+            return false;
+        }
 
         if (textObservable() != "" && domElem.textContent == "") {
             domElem.innerHTML = "";
             htmlObservable("");
             textObservable("");
-            return;
+            return false;
         }
 
         var selectedNode, anchorOffset, focusOffset, updateDom = false;
@@ -35,7 +38,7 @@ define(['constants/CssConstant'], function (CssConstant) {
                 oldNodes.push({css: oldDomNodes.children[i].classList[1], text: oldDomNodes.children[i].textContent});
 
             if (oldNodes.length == 0 && textNodes.length == 1) {
-                textNodes[0].css = CssConstant.LOCAL_CSS;
+                textNodes[0].css = homeCss;
                 selectedNode = 0;
                 anchorOffset = domElem.textContent.length;
                 focusOffset = domElem.textContent.length;
@@ -118,13 +121,20 @@ define(['constants/CssConstant'], function (CssConstant) {
                 range.setStart(domElem.children[selectedNode].firstChild, anchorOffset);
                 range.setEnd(domElem.children[selectedNode].firstChild, focusOffset);
                 window.getSelection().addRange(range);
+                selectionId = selectedNode;
+                selectionOffset = anchorOffset;
             }
+        } else {
+            selectionOffset = window.getSelection().focusOffset;
         }
+
         textObservable(domElem.textContent);
         htmlObservable(domElem.innerHTML);
+
+        return true;
     }
 
-    function getContentEditableBinding(subscriptionManager) {
+    function getContentEditableBinding(brain, subscriptionManager) {
         return {
             init: function (element, valueAccessor) {
 
@@ -136,14 +146,27 @@ define(['constants/CssConstant'], function (CssConstant) {
                         var textObservable = valueAccessor().text;
                         var htmlObservable = valueAccessor().html;
                         isUserUpdate = true;
-                        updateEditable(event.target, textObservable, htmlObservable, CssConstant.LOCAL_CSS, window, document);
-                        subscriptionManager.handleContentEditable(event.target.id, textObservable(), htmlObservable());
+                        var ret = updateEditable(event.target, textObservable, htmlObservable, brain.cssClass, window, document);
+                        if (ret)
+                            subscriptionManager.handleContentEditable(event.target.id, textObservable(), htmlObservable());
                         isUserUpdate = false;
                     }, 0);
 
                 });
 
-                valueAccessor().text.subscribe(function () {
+
+                valueAccessor().html.subscribe(function () {
+                    if (!isUserUpdate && !isRemoteUpdate) {
+                        isRemoteUpdate = true;
+                        console.log("change focus maybe");
+
+                        element.innerHTML = valueAccessor().html();
+
+                        isRemoteUpdate = false;
+                    }
+                });
+
+                function oldSubscribe() {
 
                     if (!isUserUpdate && !isRemoteUpdate) {
                         isRemoteUpdate = true;
@@ -231,21 +254,28 @@ define(['constants/CssConstant'], function (CssConstant) {
 
                         for (var a = 0; a < textNodes.length; a++) {
                             if (textNodes[a].text.length < 1) {
-                                deleteNode(textNodes[a - 1].text.length);
+                                deleteNode(a); //todo textNodes == undefined
+                                break;
                             } else {
                                 if (lastCss == textNodes[a].css) {
-                                    var possibleFocus = textNodes[a - 1].text.length;
-                                    textNodes[a - 1].text += textNodes[a].text;
-                                    deleteNode(possibleFocus);
+//                                    var possibleFocus = textNodes[a - 1].text.length;
+//                                    textNodes[a - 1].text += textNodes[a].text;
+                                    deleteNode(a);
+                                    break;
                                 }
 
                                 lastCss = textNodes[a].css;
                             }
 
-                            function deleteNode(possibleFocus) {
-                                textNodes.splice(a, 1);
-                                a--;
+                            function deleteNode(index) {
+                                textNodes.splice(index, 1);
+//                                a--;
                             }
+                        }
+
+                        var updateSelection = false;
+                        if (document.activeElement.id == "inputOneEditable") {
+                            updateSelection = true;
                         }
 
                         var newInnerHtml = "";
@@ -255,12 +285,52 @@ define(['constants/CssConstant'], function (CssConstant) {
 
                         domElem.innerHTML = newInnerHtml;
 
+                        if (updateSelection) {
+//                            console.log(window.getSelection());
+//                            console.log(window.getSelection().focusNode);
+//                            console.log(window.getSelection().focusNode.parentNode);
+
+//                            var index = 0;
+//                            (function calcIndex(node) {
+//                                if (node.previousSibling != null) {
+//                                    index++;
+//
+//                                    console.log(node.previousSibling);
+
+//                                    calcIndex(node.previousSibling);
+//                                }
+//                            })(window.getSelection().focusNode.parentNode);
+
+//                            var offSet = window.getSelection().focusOffset;
+
+                            if (domElem.children[selectionId]) {
+                                window.getSelection().removeAllRanges();
+
+                                var range = document.createRange();
+
+                                console.log("id: " + selectionId);
+                                console.log("id length: " + textNodes[selectionId].text.length);
+                                console.log(textNodes);
+                                console.log("offset " + selectionOffset);
+
+                                range.setStart(domElem.children[selectionId].firstChild, selectionOffset);
+                                //todo index irgendwas outofbound oder so
+                                range.setEnd(domElem.children[selectionId].firstChild, selectionOffset);
+                                window.getSelection().addRange(range);
+                            }
+                            //todo verliere index wenn anderer schreibt und ich cursor verwende
+
+                            //todo umschreiben, sodass nur eigener client sagt wo etwas dazukommt
+                            // und dann in json die mehrinformation mitschickt
+                        }
+
                         textObservable(domElem.textContent);
                         htmlObservable(domElem.innerHTML);
 
                         isRemoteUpdate = false;
                     }
-                });
+                }
+
             }
 //        update: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
 // todo: file knockout issue, because update function only gets fired once or twice (maybe because of 2 observables??),

@@ -51,6 +51,7 @@ require(['require', 'lib/knockout', 'Connector', 'Brain', 'History', 'Messenger'
 
     if (userName !== undefined) {
         brain.userId = userName;
+        brain.cssClass = urlParams['css'];
     }
 
     var inputIds = [];
@@ -66,7 +67,7 @@ require(['require', 'lib/knockout', 'Connector', 'Brain', 'History', 'Messenger'
         generateId, history, historyManager);
     var connectionManager = new ConnectionManager(view, configView, brain, historyManager, history);
     
-    ko.bindingHandlers.contentEditable = getContentEditableBinding(subscriptionManager);
+    ko.bindingHandlers.contentEditable = getContentEditableBinding(brain, subscriptionManager);
 
     ko.applyBindings(configView, document.getElementById('config'));
     ko.applyBindings(view, document.getElementById('mainView'));
