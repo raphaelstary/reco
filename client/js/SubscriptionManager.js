@@ -54,7 +54,6 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
         this.urlParams['user'] = newVal;
         this.urlJuggler.updateParams(this.urlParams);
         this.brain.userId = newVal;
-//        this.configView.user(newVal); wtf??
     };
 
     SubscriptionManager.prototype.handleCssClass = function (newVal) {

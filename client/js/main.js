@@ -51,6 +51,9 @@ require(['require', 'lib/knockout', 'Connector', 'Brain', 'History', 'Messenger'
 
     if (userName !== undefined) {
         brain.userId = userName;
+    }
+
+    if (urlParams['css'] !== undefined) {
         brain.cssClass = urlParams['css'];
     }
 

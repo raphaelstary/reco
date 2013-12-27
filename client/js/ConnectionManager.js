@@ -8,10 +8,15 @@ define(function () {
     }
 
     ConnectionManager.prototype.handleInfo = function (data) {
-//        this.brain.register(data, this.configView.user);
-        if (this.brain.userId === undefined && data.state === 'new' && data.user !== undefined) {
-            this.configView.user(data.user);
-            this.configView.cssClass(data.css);
+
+        if (data.state === 'new') {
+            if (this.brain.userId === undefined && data.state === 'new' && data.user !== undefined) {
+                this.configView.user(data.user);
+            }
+
+            if (this.brain.cssClass === undefined && data.css !== undefined) {
+                this.configView.cssClass(data.css);
+            }
         }
     };
 

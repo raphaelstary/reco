@@ -8,34 +8,15 @@
 <script>
     var socket = io.connect('http://localhost:8080/');
 
-//    var data;
-    var i = 0;
     socket.on('update', function (req) {
-        req.value += 'a';
+
+        req.htmlValue = req.htmlValue.substring(0, req.htmlValue.length - "</span>".length)
+                + "abc"
+                + req.htmlValue.substring(req.htmlValue.length - "</span>".length);
 
         socket.emit('update', req);
-        function tick() {
-            setTimeout(function () {
-                req.value += 'z';
-                socket.emit('update', req);
-                if (i < 10) {
-                    i++;
-                    tick();
-                }
-            }, 1000);
-        }
-        if (i == 0)
-            tick();
     });
 
-//    data = {
-//        user: 'test-user',
-//        id: 5678987,
-//        field: 'inputOne',
-//        value: 'a'
-//    };
-
-//    socket.emit('update', data);
 </script>
 </body>
 </html>
