@@ -3,18 +3,23 @@ define(function () {
 
     function updateEditable(domElem, textObservable, htmlObservable, homeCss, window, document) {
         if (domElem.textContent == textObservable()) {
-            if (window.getSelection().anchorOffset == selectionOffset + 1) {
-                selectionOffset = window.getSelection().anchorOffset;
+            var anchOffset = window.getSelection().anchorOffset;
 
-            } else if (window.getSelection().anchorOffset >= selectionOffset + 2) {
-                selectionOffset = window.getSelection().anchorOffset;
+            if (anchOffset == selectionOffset) {
+                return false;
+
+            } else if (anchOffset == selectionOffset + 1) {
+                selectionOffset = anchOffset;
+
+            } else if (anchOffset >= selectionOffset + 2) {
+                selectionOffset = anchOffset;
                 selectionId--;
 
-            } else if (window.getSelection().anchorOffset == selectionOffset - 1) {
-                selectionOffset = window.getSelection().anchorOffset;
+            } else if (anchOffset == selectionOffset - 1) {
+                selectionOffset = anchOffset;
 
-            } else if (window.getSelection().anchorOffset <= selectionOffset + 2) {
-                selectionOffset = window.getSelection().anchorOffset;
+            } else if (anchOffset <= selectionOffset + 2) {
+                selectionOffset = anchOffset;
                 selectionId++;
             }
 
@@ -64,7 +69,9 @@ define(function () {
                     if (currTxtNode.css != homeCss && currTxtNode.text.length >= oldNodes[i].text.length) {
                         for (var u = 0; u < currTxtNode.text.length; u++) {
 
-                            if (currTxtNode.text[u] != oldNodes[i].text[u]) {
+                            if (currTxtNode.text[u] != oldNodes[i].text[u] &&
+                                !((currTxtNode.text.charCodeAt(u) == 160 && oldNodes[i].text.charCodeAt(u) == 32) ||
+                                    (currTxtNode.text.charCodeAt(u) == 32 && oldNodes[i].text.charCodeAt(u) == 160))) {
 
                                 var newTxtNode = {css: homeCss, text: currTxtNode.text[u]};
                                 var partOneOldTextNode = {css: currTxtNode.css, text: currTxtNode.text.substring(0, u)};
@@ -137,9 +144,28 @@ define(function () {
                 window.getSelection().addRange(range);
                 selectionId = selectedNode;
                 selectionOffset = anchorOffset;
+
+                console.log("active selection change");
+                console.log("selection id " + selectionId);
+                console.log("selection offset " + selectionOffset);
+            } else {
+                console.log("##########################");
+                console.log("NO ACTIVE SELECTION CHANGE");
+                console.log("##########################");
             }
         } else {
+            if (domElem.textContent.length < (textObservable() != null ? textObservable() : "").length &&
+                domElem.children[selectionId] == null && domElem.children[selectionId - 1] != null) {
+                selectionId--;
+            } else if (domElem.children[selectedNode] != null) {
+                selectionId = selectedNode;
+            }
+
             selectionOffset = window.getSelection().focusOffset;
+
+            console.log("active selection change WITHOUT DOM CHANGE");
+            console.log("selection id " + selectionId);
+            console.log("selection offset " + selectionOffset);
         }
 
         textObservable(domElem.textContent);
@@ -193,12 +219,7 @@ define(function () {
 
                             if (oldNodes.length == newNodes.length) {
                                 if (selectionOffset > newNodes[selectionId].text.length) {
-                                    range.setStart(element.children[selectionId].firstChild, newNodes[selectionId].text.length);
-                                    range.setEnd(element.children[selectionId].firstChild, newNodes[selectionId].text.length);
-
-                                } else {
-                                    range.setStart(element.children[selectionId].firstChild, selectionOffset);
-                                    range.setEnd(element.children[selectionId].firstChild, selectionOffset);
+                                    selectionOffset = newNodes[selectionId].text.length;
                                 }
 
                             } else if (oldNodes.length < newNodes.length) {
@@ -214,22 +235,11 @@ define(function () {
                                 }
 
                                 if (addedNode < selectionId) {
-                                    range.setStart(element.children[selectionId + 2].firstChild, selectionOffset);
-                                    range.setEnd(element.children[selectionId + 2].firstChild, selectionOffset);
+                                    selectionId = selectionId + 2;
 
-                                } else if (addedNode == selectionId) {
-
-                                    if (selectionOffset > newNodes[addedNode].text.length) {
-                                        range.setStart(element.children[selectionId + 2].firstChild, selectionOffset - newNodes[addedNode].text.length);
-                                        range.setEnd(element.children[selectionId + 2].firstChild, selectionOffset - newNodes[addedNode].text.length);
-                                    } else {
-                                        range.setStart(element.children[selectionId].firstChild, selectionOffset);
-                                        range.setEnd(element.children[selectionId].firstChild, selectionOffset);
-                                    }
-
-                                } else if (addedNode > selectionId) {
-                                    range.setStart(element.children[selectionId].firstChild, selectionOffset);
-                                    range.setEnd(element.children[selectionId].firstChild, selectionOffset);
+                                } else if (addedNode == selectionId && selectionOffset > newNodes[addedNode].text.length) {
+                                    selectionId = selectionId + 2;
+                                    selectionOffset = selectionOffset - newNodes[addedNode].text.length;
                                 }
 
                             } else if (oldNodes.length > newNodes.length) {
@@ -244,19 +254,35 @@ define(function () {
                                     deletedNode = oldNodes.length - 1;
                                 }
 
-                                if (deletedNode < selectionId) {
-                                    range.setStart(element.children[selectionId - 1].firstChild, selectionOffset);
-                                    range.setEnd(element.children[selectionId - 1].firstChild, selectionOffset);
+                                if (deletedNode < selectionId && selectionId > 0) {
 
-                                } else if (deletedNode == selectionId) {
-                                    range.setStart(element.children[selectionId - 1].firstChild, newNodes[selectionId - 1].text.length);
-                                    range.setEnd(element.children[selectionId - 1].firstChild, newNodes[selectionId - 1].text.length);
+                                    if (oldNodes.length - 2 == newNodes.length) {
 
-                                } else if (deletedNode > selectionId) {
-                                    range.setStart(element.children[selectionId].firstChild, selectionOffset);
-                                    range.setEnd(element.children[selectionId].firstChild, selectionOffset);
+                                        if (selectionId - 1 == deletedNode) {
+                                            selectionId = selectionId - 1;
+                                            selectionOffset = oldNodes[deletedNode].text.length;
+
+                                        } else if (selectionId - 2 == deletedNode) {
+                                            selectionId = selectionId - 2;
+                                            selectionOffset = oldNodes[deletedNode].text.length + selectionOffset;
+                                        }
+
+                                    } else {
+                                        selectionId = selectionId - 1;
+                                    }
+
+                                } else if (deletedNode == selectionId && selectionId > 0) {
+                                    var newSelectionId = selectionId - 1;
+                                    selectionId = newSelectionId;
+                                    selectionOffset = newNodes[newSelectionId].text.length;
                                 }
                             }
+                            console.log("passive selection change");
+                            console.log("selection id " + selectionId);
+                            console.log("selection offset " + selectionOffset);
+
+                            range.setStart(element.children[selectionId].firstChild, selectionOffset);
+                            range.setEnd(element.children[selectionId].firstChild, selectionOffset);
 
                             window.getSelection().addRange(range);
                         }
