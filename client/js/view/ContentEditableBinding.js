@@ -159,6 +159,9 @@ define(function () {
                 selectionId--;
             } else if (domElem.children[selectedNode] != null) {
                 selectionId = selectedNode;
+            } else if (domElem.textContent.length < (textObservable() != null ? textObservable() : "").length &&
+                (domElem.children[selectionId] == null || selectionOffset < window.getSelection().focusOffset)) {
+                selectionId--;
             }
 
             selectionOffset = window.getSelection().focusOffset;
@@ -218,6 +221,13 @@ define(function () {
                             var range = document.createRange();
 
                             if (oldNodes.length == newNodes.length) {
+                                if (newNodes[selectionId] == null) {
+                                    if (selectionId != null && selectionId > 0) {
+                                        selectionId--;
+                                    } else {
+                                        selectionId = 0;
+                                    }
+                                }
                                 if (selectionOffset > newNodes[selectionId].text.length) {
                                     selectionOffset = newNodes[selectionId].text.length;
                                 }
@@ -280,6 +290,21 @@ define(function () {
                             console.log("passive selection change");
                             console.log("selection id " + selectionId);
                             console.log("selection offset " + selectionOffset);
+
+                            if (selectionId == null) {
+                                selectionId = 0;
+                            }
+                            if (selectionOffset == null) {
+                                selectionOffset = 0;
+                            }
+                            if (element.children[selectionId] == null || element.children[selectionId].firstChild == null) {
+                                selectionId = 0;
+                            }
+                            if (selectionOffset < 0) {
+                                selectionOffset = 0;
+                            } else if (selectionOffset > newNodes[selectionId].text.length) {
+                                selectionOffset = newNodes[selectionId].text.length;
+                            }
 
                             range.setStart(element.children[selectionId].firstChild, selectionOffset);
                             range.setEnd(element.children[selectionId].firstChild, selectionOffset);

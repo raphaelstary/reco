@@ -10,8 +10,9 @@
 
     socket.on('update', function (req) {
 
+        req.value += "a";
         req.htmlValue = req.htmlValue.substring(0, req.htmlValue.length - "</span>".length)
-                + "abc"
+                + "a"
                 + req.htmlValue.substring(req.htmlValue.length - "</span>".length);
 
         socket.emit('update', req);
