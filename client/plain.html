@@ -13,11 +13,11 @@
 </head>
 <body>
 
-<div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-inner">
+<div id="config" class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner" data-bind="visible: isConfigVisible">
         <div class="container">
 
-            <div id="config" class="nav-collapse collapse navbar-form form-inline navbar-text">
+            <div class="nav-collapse collapse navbar-form form-inline navbar-text" data-bind="visible: isConfigVisible">
                 <label for="merge">merge strategy</label>
                 <select id="merge" class="span2"
                         data-bind="options: mergeValues, value: merge">
@@ -38,6 +38,8 @@
             <!--/.nav-collapse -->
         </div>
     </div>
+    <a href="#" data-bind="click: toggleShowConfig.bind($root), visible: !isConfigVisible()">show config</a>
+    <a href="#" data-bind="click: toggleShowConfig.bind($root), visible: isConfigVisible">hide config</a>
 </div>
 
 <div id="mainView" class="row">
