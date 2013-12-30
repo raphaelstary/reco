@@ -37,7 +37,7 @@ define(function () {
 
         var textNodes = [];
         for (var i = 0; i < domElem.children.length; i++)
-            textNodes.push({css: domElem.children[i].classList[1], text: domElem.children[i].textContent});
+            textNodes.push({css: domElem.children[i].classList[0], text: domElem.children[i].textContent});
 
         // if it's the 1st character help with init
         if (textNodes.length == 0 && domElem.textContent.trim().length > 0) {
@@ -54,7 +54,7 @@ define(function () {
 
             var oldNodes = [];
             for (i = 0; i < oldDomNodes.children.length; i++)
-                oldNodes.push({css: oldDomNodes.children[i].classList[1], text: oldDomNodes.children[i].textContent});
+                oldNodes.push({css: oldDomNodes.children[i].classList[0], text: oldDomNodes.children[i].textContent});
 
             if (oldNodes.length == 0 && textNodes.length == 1) {
                 textNodes[0].css = homeCss;
@@ -130,7 +130,7 @@ define(function () {
         if (updateDom) {
             var newInnerHtml = "";
             textNodes.forEach(function (txtN) {
-                newInnerHtml += '<span class="label ' + txtN.css + '">' + txtN.text + '</span>';
+                newInnerHtml += '<span class="' + txtN.css + '">' + txtN.text + '</span>';
             });
 
             domElem.innerHTML = newInnerHtml;
@@ -206,7 +206,7 @@ define(function () {
                         var oldNodes = [], i;
                         if (isElementSelected) {
                             for (i = 0; i < element.children.length; i++)
-                                oldNodes.push({css: element.children[i].classList[1], text: element.children[i].textContent});
+                                oldNodes.push({css: element.children[i].classList[0], text: element.children[i].textContent});
                         }
 
                         // update the DOM
@@ -215,7 +215,7 @@ define(function () {
                         if (isElementSelected) {
                             var newNodes = [];
                             for (i = 0; i < element.children.length; i++)
-                                newNodes.push({css: element.children[i].classList[1], text: element.children[i].textContent});
+                                newNodes.push({css: element.children[i].classList[0], text: element.children[i].textContent});
 
                             window.getSelection().removeAllRanges();
                             var range = document.createRange();

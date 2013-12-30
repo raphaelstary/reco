@@ -15,13 +15,12 @@ app.listen(8080);
 var io = require('socket.io').listen(app);
 
 var CSS = {
-    0: "label-info",
-    1: "label-warning",
-    2: "label-default",
-    3: "label-danger",
-    4: "label-primary",
-    5: "label-success"
-
+    0: "user-one",
+    1: "user-two",
+    2: "user-three",
+    3: "user-four",
+    4: "user-five",
+    5: "user-six"
 };
 
 // Delete this row if you want to see debug messages

@@ -58,7 +58,7 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
 
     SubscriptionManager.prototype.handleCssClass = function (newVal) {
         if (newVal === undefined || newVal === null || newVal.trim() === '') {
-            newVal = 'label-warning';
+            newVal = 'user-one';
         }
 
         this.urlParams['css'] = newVal;

@@ -3,6 +3,7 @@
 <head>
     <title>reco - real time collaboration</title>
     <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/custom.css" rel="stylesheet">
     <style type="text/css">
         body {
             padding-top: 60px;
@@ -50,7 +51,7 @@
                    data-bind="value: inputOne, valueUpdate: 'afterkeydown', disable: inputOneDisabled,
                    hasFocus: inputOneSelected, visible: !isMultiMergeVisible()">
 
-            <div id="inputOneEditable" class="help-block"
+            <div id="inputOneEditable" class="editable"
                  data-bind="visible: isMultiMergeVisible, attr: {contentEditable: isMultiMergeVisible},
                  contentEditable: {text: inputOne, html: inputOneEditable}">
 
@@ -69,7 +70,7 @@
                    data-bind="value: inputTwo, valueUpdate: 'afterkeydown', disable: inputTwoDisabled,
                    hasFocus: inputTwoSelected, visible: !isMultiMergeVisible()">
 
-            <div id="inputTwoEditable" class="help-block"
+            <div id="inputTwoEditable" class="editable"
                  data-bind="visible: isMultiMergeVisible, attr: {contentEditable: isMultiMergeVisible},
                  contentEditable: {text: inputTwo, html: inputTwoEditable}">
 
@@ -90,7 +91,7 @@
                    data-bind="value: inputThree, valueUpdate: 'afterkeydown', disable: inputThreeDisabled,
                    hasFocus: inputThreeSelected, visible: !isMultiMergeVisible()">
 
-            <div id="inputThreeEditable" class="help-block"
+            <div id="inputThreeEditable" class="editable"
                  data-bind="visible: isMultiMergeVisible, attr: {contentEditable: isMultiMergeVisible},
                  contentEditable: {text: inputThree, html: inputThreeEditable}">
 
