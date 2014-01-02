@@ -21,8 +21,8 @@ define(['constants/NotificationConstant'], function (NotificationConstant) {
             this.view.notification("user " + data.user + " is typing in " + data.field);
 
             var rect = document.getElementById(data.field).getBoundingClientRect();
-            this.view.toolTipLeft(rect.left + rect.width + "px");
-            this.view.toolTipTop(rect.top + "px");
+            this.view.toolTipLeft(rect.left + window.scrollX + rect.width + "px");
+            this.view.toolTipTop(rect.top + window.scrollY + "px");
         }
     };
 
