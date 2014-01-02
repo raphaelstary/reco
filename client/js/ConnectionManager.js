@@ -1,10 +1,11 @@
 define(function () {
-    function ConnectionManager(view, configView, brain, historyManager, history) {
+    function ConnectionManager(view, configView, brain, historyManager, history, messenger) {
         this.view = view;
         this.configView = configView;
         this.brain = brain;
         this.historyManager = historyManager;
         this.history = history;
+        this.messenger = messenger;
     }
 
     ConnectionManager.prototype.handleInfo = function (data) {
@@ -21,6 +22,8 @@ define(function () {
     };
 
     ConnectionManager.prototype.handleUpdate = function (data) {
+
+//        this.messenger.push(data);
         this.history.add(data);
         this.view.update(data.field, data.value, data.htmlValue);
 

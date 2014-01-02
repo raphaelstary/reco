@@ -67,8 +67,8 @@ require(['require', 'lib/knockout', 'Connector', 'Brain', 'History', 'Messenger'
 
     var historyManager = new HistoryManager(history, view);
     var subscriptionManager = new SubscriptionManager(view, configView, connector, brain, urlJuggler, urlParams,
-        generateId, history, historyManager);
-    var connectionManager = new ConnectionManager(view, configView, brain, historyManager, history);
+        generateId, history, historyManager, messenger);
+    var connectionManager = new ConnectionManager(view, configView, brain, historyManager, history, messenger);
     
     ko.bindingHandlers.contentEditable = getContentEditableBinding(brain, subscriptionManager);
 

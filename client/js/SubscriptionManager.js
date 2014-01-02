@@ -1,6 +1,6 @@
 define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/MergeConstant',
     'constants/NotificationConstant', 'lib/knockout', 'TextToken', 'utils/generateId'], function (InputConstant, HistoryConstant, MergeConstant, NotificationConstant, ko, TextToken, generateId) {
-    function SubscriptionManager(view, configView, connector, brain, urlJuggler, urlParams, generateIdFn, history, historyManager) {
+    function SubscriptionManager(view, configView, connector, brain, urlJuggler, urlParams, generateIdFn, history, historyManager, messenger) {
         this.view = view;
         this.configView = configView;
         this.connector = connector;
@@ -10,6 +10,7 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
         this.generateId = generateIdFn;
         this.history = history;
         this.historyManager = historyManager;
+        this.messenger = messenger;
     }
 
     SubscriptionManager.prototype.handleMerge = function (newVal) {
@@ -117,6 +118,7 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
             htmlValue: htmlValue
         };
 
+//        self.messenger.push(data);
         self.history.add(data);
         self.connector.send(data);
 
