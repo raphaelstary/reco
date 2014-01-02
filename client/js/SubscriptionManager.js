@@ -49,6 +49,7 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
         this.messenger.update(newVal);
         this.view.isNotificationBarVisible(newVal === NotificationConstant.BAR);
         this.view.isBubbleNotificationVisible(newVal === NotificationConstant.BUBBLE);
+        this.view.isObjectNotificationVisible(newVal === NotificationConstant.OBJECT);
     };
 
     SubscriptionManager.prototype.handleUser = function (newVal) {

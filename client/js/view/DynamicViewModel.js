@@ -19,12 +19,16 @@ define(['lib/knockout', 'TextToken', 'constants/HistoryConstant', 'constants/Mer
         this.isMultiMergeVisible = ko.observable(mergeStrategy === MergeConstant.MULTI);
         this.isNotificationBarVisible = ko.observable(notificationStrategy === NotificationConstant.BAR);
         this.isBubbleNotificationVisible = ko.observable(notificationStrategy === NotificationConstant.BUBBLE);
+        this.isObjectNotificationVisible = ko.observable(notificationStrategy === NotificationConstant.OBJECT);
         this.fieldForHistory = "";
         this.userForHistory = "";
         this.users = ko.observable([]);
 
         this.notification = ko.observable();
         this.notifications = ko.observableArray();
+
+        this.toolTipTop = ko.observable("50px");
+        this.toolTipLeft = ko.observable("50px");
     }
 
     DynamicViewModel.prototype.update = function (fieldId, value, markupValue) {

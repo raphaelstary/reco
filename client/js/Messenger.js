@@ -16,6 +16,13 @@ define(['constants/NotificationConstant'], function (NotificationConstant) {
                     self.view.notifications.remove(data);
                 }, 3000);
             })(data, this);
+
+        } else if (this.currentStrategy === NotificationConstant.OBJECT) {
+            this.view.notification("user " + data.user + " is typing in " + data.field);
+
+            var rect = document.getElementById(data.field).getBoundingClientRect();
+            this.view.toolTipLeft(rect.left + rect.width + "px");
+            this.view.toolTipTop(rect.top + "px");
         }
     };
 

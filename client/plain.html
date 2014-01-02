@@ -118,7 +118,137 @@
 
             </span>
 
+            <label for="inputFour">Input four</label>
+
+            <input id="inputFour" type="text"
+                   data-bind="value: inputFour, valueUpdate: 'afterkeydown', disable: inputFourDisabled,
+                   hasFocus: inputFourSelected, visible: !isMultiMergeVisible()">
+
+            <div id="inputFourEditable" class="editable"
+                 data-bind="visible: isMultiMergeVisible, attr: {contentEditable: isMultiMergeVisible},
+                 contentEditable: {text: inputFour, html: inputFourEditable}">
+
+            </div>
+
+            <span class="help-inline" data-bind="visible: isHistoryByFieldVisible">
+                <a href="#" data-bind="click: showHistoryByField.bind($data, 'inputFour')">
+                    <i class="icon-time"></i>
+                </a>
+            </span>
+
+
+            <label for="inputFive">Input five</label>
+
+            <input id="inputFive" type="text"
+                   data-bind="value: inputFive, valueUpdate: 'afterkeydown', disable: inputFiveDisabled,
+                   hasFocus: inputFiveSelected, visible: !isMultiMergeVisible()">
+
+            <div id="inputFiveEditable" class="editable"
+                 data-bind="visible: isMultiMergeVisible, attr: {contentEditable: isMultiMergeVisible},
+                 contentEditable: {text: inputFive, html: inputFiveEditable}">
+
+            </div>
+
+            <span class="help-inline" data-bind="visible: isHistoryByFieldVisible">
+                <a href="#" data-bind="click: showHistoryByField.bind($data, 'inputFive')">
+                    <i class="icon-time"></i>
+                </a>
+            </span>
+            <span class="help-block" data-bind="visible: isMultiMergeVisible">
+
+            </span>
+
+            <label for="inputSix">Input six</label>
+
+            <input id="inputSix" type="text"
+                   data-bind="value: inputSix, valueUpdate: 'afterkeydown', disable: inputSixDisabled,
+                   hasFocus: inputSixSelected, visible: !isMultiMergeVisible()">
+
+            <div id="inputSixEditable" class="editable"
+                 data-bind="visible: isMultiMergeVisible, attr: {contentEditable: isMultiMergeVisible},
+                 contentEditable: {text: inputSix, html: inputSixEditable}">
+
+            </div>
+
+            <span class="help-inline" data-bind="visible: isHistoryByFieldVisible">
+                <a href="#" data-bind="click: showHistoryByField.bind($data, 'inputSix')">
+                    <i class="icon-time"></i>
+                </a>
+            </span>
+            <span class="help-block" data-bind="visible: isMultiMergeVisible">
+
+            </span>
+
+            <label for="inputSeven">Input seven</label>
+
+            <input id="inputSeven" type="text"
+                   data-bind="value: inputSeven, valueUpdate: 'afterkeydown', disable: inputSevenDisabled,
+                   hasFocus: inputSevenSelected, visible: !isMultiMergeVisible()">
+
+            <div id="inputSevenEditable" class="editable"
+                 data-bind="visible: isMultiMergeVisible, attr: {contentEditable: isMultiMergeVisible},
+                 contentEditable: {text: inputSeven, html: inputSevenEditable}">
+
+            </div>
+
+            <span class="help-inline" data-bind="visible: isHistoryByFieldVisible">
+                <a href="#" data-bind="click: showHistoryByField.bind($data, 'inputSeven')">
+                    <i class="icon-time"></i>
+                </a>
+            </span>
+
+
+            <label for="inputEight">Input eight</label>
+
+            <input id="inputEight" type="text"
+                   data-bind="value: inputEight, valueUpdate: 'afterkeydown', disable: inputEightDisabled,
+                   hasFocus: inputEightSelected, visible: !isMultiMergeVisible()">
+
+            <div id="inputEightEditable" class="editable"
+                 data-bind="visible: isMultiMergeVisible, attr: {contentEditable: isMultiMergeVisible},
+                 contentEditable: {text: inputEight, html: inputEightEditable}">
+
+            </div>
+
+            <span class="help-inline" data-bind="visible: isHistoryByFieldVisible">
+                <a href="#" data-bind="click: showHistoryByField.bind($data, 'inputEight')">
+                    <i class="icon-time"></i>
+                </a>
+            </span>
+            <span class="help-block" data-bind="visible: isMultiMergeVisible">
+
+            </span>
+
+            <label for="inputNine">Input nine</label>
+
+            <input id="inputNine" type="text"
+                   data-bind="value: inputNine, valueUpdate: 'afterkeydown', disable: inputNineDisabled,
+                   hasFocus: inputNineSelected, visible: !isMultiMergeVisible()">
+
+            <div id="inputNineEditable" class="editable"
+                 data-bind="visible: isMultiMergeVisible, attr: {contentEditable: isMultiMergeVisible},
+                 contentEditable: {text: inputNine, html: inputNineEditable}">
+
+            </div>
+
+            <span class="help-inline" data-bind="visible: isHistoryByFieldVisible">
+                <a href="#" data-bind="click: showHistoryByField.bind($data, 'inputNine')">
+                    <i class="icon-time"></i>
+                </a>
+            </span>
+            <span class="help-block" data-bind="visible: isMultiMergeVisible">
+
+            </span>
+
         </fieldset>
+    </div>
+
+    <div data-bind="visible: isObjectNotificationVisible">
+        <div class="tooltip right in" data-bind="style: {top: toolTipTop, left: toolTipLeft, display: 'block'}">
+            <div class="tooltip-arrow"></div>
+            <div class="tooltip-inner" data-bind="text: notification">
+            </div>
+        </div>
     </div>
 
     <ul data-bind="visible: isHistoryByUserVisible, foreach: users">
