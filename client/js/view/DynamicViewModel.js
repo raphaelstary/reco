@@ -29,6 +29,7 @@ define(['lib/knockout', 'TextToken', 'constants/HistoryConstant', 'constants/Mer
 
         this.toolTipTop = ko.observable("50px");
         this.toolTipLeft = ko.observable("50px");
+        this.toolTipArrow = ko.observable("right");
     }
 
     DynamicViewModel.prototype.update = function (fieldId, value, markupValue) {

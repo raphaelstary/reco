@@ -21,8 +21,22 @@ define(['constants/NotificationConstant'], function (NotificationConstant) {
             this.view.notification("user " + data.user + " is typing in " + data.field);
 
             var rect = document.getElementById(data.field).getBoundingClientRect();
-            this.view.toolTipLeft(rect.left + window.scrollX + rect.width + "px");
-            this.view.toolTipTop(rect.top + window.scrollY + "px");
+
+            if (rect.bottom < window.scrollY) {
+                this.view.toolTipLeft(rect.left + window.scrollX + rect.width + "px");
+                this.view.toolTipTop(50 + window.scrollY + "px");
+                this.view.toolTipArrow("bottom");
+
+            } else if (rect.top > (window.scrollY + window.innerHeight)) {
+                this.view.toolTipLeft(rect.left + window.scrollX + rect.width + "px");
+                this.view.toolTipTop(window.innerHeight - 50 + window.scrollY + "px");
+                this.view.toolTipArrow("top");
+
+            } else {
+                this.view.toolTipLeft(rect.left + window.scrollX + rect.width + "px");
+                this.view.toolTipTop(rect.top + window.scrollY + "px");
+                this.view.toolTipArrow("right");
+            }
         }
     };
 

@@ -244,7 +244,8 @@
     </div>
 
     <div data-bind="visible: isObjectNotificationVisible">
-        <div class="tooltip right in" data-bind="style: {top: toolTipTop, left: toolTipLeft, display: 'block'}">
+        <div class="tooltip in" data-bind="style: {top: toolTipTop, left: toolTipLeft, display: 'block'},
+            css: {right: toolTipArrow() == 'right', bottom: toolTipArrow() == 'bottom', top: toolTipArrow() == 'top'}">
             <div class="tooltip-arrow"></div>
             <div class="tooltip-inner" data-bind="text: notification">
             </div>
