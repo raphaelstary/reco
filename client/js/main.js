@@ -31,7 +31,7 @@ require(['require', 'lib/knockout', 'Connector', 'Brain', 'History', 'Messenger'
     var connector = new Connector();
     var brain = new Brain();
     var history = new History();
-    var messenger = new Messenger();
+
     var urlJuggler = new UrlJuggler(location.pathname, window.history.pushState.bind(window.history));
     var urlParams = parseUrlParams(location.search);
 
@@ -46,6 +46,8 @@ require(['require', 'lib/knockout', 'Connector', 'Brain', 'History', 'Messenger'
     var configView = new ConfigViewModel(getValues(MergeConstant), getValues(HistoryConstant),
         getValues(NotificationConstant),
         mergeStrategy, historyStrategy, notificationStrategy, urlParams['user']);
+
+
 
     var userName = urlParams['user'];
 
@@ -65,6 +67,8 @@ require(['require', 'lib/knockout', 'Connector', 'Brain', 'History', 'Messenger'
 
     var view = new DynamicViewModel(inputIds, history, configView.history(), configView.merge());
 
+    var messenger = new Messenger(notificationStrategy, view);
+
     var historyManager = new HistoryManager(history, view);
     var subscriptionManager = new SubscriptionManager(view, configView, connector, brain, urlJuggler, urlParams,
         generateId, history, historyManager, messenger);
@@ -78,9 +82,4 @@ require(['require', 'lib/knockout', 'Connector', 'Brain', 'History', 'Messenger'
     var app = new App(view, configView, connector, subscriptionManager, connectionManager);
     app.setUpInputSubscriptions(inputs);
     app.setUpConnection(URL);
-
-    //todo nxt steps:
-    //dann multi merge
-    //dann notifications
-
 });

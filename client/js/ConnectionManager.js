@@ -23,7 +23,7 @@ define(function () {
 
     ConnectionManager.prototype.handleUpdate = function (data) {
 
-//        this.messenger.push(data);
+        this.messenger.push(data);
         this.history.add(data);
         this.view.update(data.field, data.value, data.htmlValue);
 

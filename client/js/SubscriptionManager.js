@@ -45,6 +45,10 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
         }
         this.urlParams['notification'] = newVal;
         this.urlJuggler.updateParams(this.urlParams);
+
+        this.messenger.update(newVal);
+        this.view.isNotificationBarVisible(newVal === NotificationConstant.BAR);
+        this.view.isBubbleNotificationVisible(newVal === NotificationConstant.BUBBLE);
     };
 
     SubscriptionManager.prototype.handleUser = function (newVal) {
@@ -118,7 +122,7 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
             htmlValue: htmlValue
         };
 
-//        self.messenger.push(data);
+        self.messenger.push(data);
         self.history.add(data);
         self.connector.send(data);
 

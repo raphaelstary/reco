@@ -1,7 +1,8 @@
 define(['lib/knockout', 'TextToken', 'constants/HistoryConstant', 'constants/MergeConstant',
-    'constants/InputConstant'], function (ko, TextToken, HistoryConstant, MergeConstant, InputConstant) {
+    'constants/InputConstant', 'constants/NotificationConstant'], function (ko, TextToken, HistoryConstant, MergeConstant,
+                                                                    InputConstant, NotificationConstant) {
 
-    function DynamicViewModel(inputIds, history, historyStrategy, mergeStrategy) {
+    function DynamicViewModel(inputIds, history, historyStrategy, mergeStrategy, notificationStrategy) {
         this.historyRepo = history;
 
         var self = this;
@@ -16,9 +17,14 @@ define(['lib/knockout', 'TextToken', 'constants/HistoryConstant', 'constants/Mer
         this.isHistoryByFieldVisible = ko.observable(historyStrategy === HistoryConstant.BY_OBJECT);
         this.isHistoryByUserVisible = ko.observable(historyStrategy === HistoryConstant.BY_USER);
         this.isMultiMergeVisible = ko.observable(mergeStrategy === MergeConstant.MULTI);
+        this.isNotificationBarVisible = ko.observable(notificationStrategy === NotificationConstant.BAR);
+        this.isBubbleNotificationVisible = ko.observable(notificationStrategy === NotificationConstant.BUBBLE);
         this.fieldForHistory = "";
         this.userForHistory = "";
         this.users = ko.observable([]);
+
+        this.notification = ko.observable();
+        this.notifications = ko.observableArray();
     }
 
     DynamicViewModel.prototype.update = function (fieldId, value, markupValue) {

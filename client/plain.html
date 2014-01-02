@@ -43,11 +43,11 @@
 </div>
 
 <div id="mainView" class="row">
-    <div id="statusbar" class="navbar">
+    <div id="statusbar" class="navbar" data-bind="visible: isNotificationBarVisible">
         <div class="navbar-inner">
             <div class="container">
                 <p class="navbar-text">
-                    Test
+                    <span data-bind="text: notification"></span>
                 </p>
             </div>
         </div>
@@ -142,6 +142,15 @@
                     <br>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="span3 offset10" style="position: absolute; bottom: 0"
+         data-bind="visible: isBubbleNotificationVisible, foreach: notifications">
+        <div class="alert alert-info">
+            <span data-bind="text: user"></span>
+            is typing in
+            <span data-bind="text: field"></span>
         </div>
     </div>
 </div>
