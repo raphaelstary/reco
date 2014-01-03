@@ -135,7 +135,6 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
             htmlValue: htmlValue
         };
 
-        self.messenger.push(data);
         self.history.add(data);
         self.connector.send(data);
 

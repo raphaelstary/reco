@@ -65,7 +65,7 @@ require(['require', 'lib/knockout', 'Connector', 'Brain', 'History', 'Messenger'
         inputIds.push(inputs[i].id);
     }
 
-    var view = new DynamicViewModel(inputIds, history, configView.history(), configView.merge());
+    var view = new DynamicViewModel(inputIds, history, configView.history(), configView.merge(), configView.notification());
 
     var messenger = new Messenger(notificationStrategy, view);
 
