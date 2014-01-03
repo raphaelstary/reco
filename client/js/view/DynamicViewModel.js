@@ -16,12 +16,13 @@ define(['lib/knockout', 'TextToken', 'constants/HistoryConstant', 'constants/Mer
         this.history = ko.observable();
         this.isHistoryByFieldVisible = ko.observable(historyStrategy === HistoryConstant.BY_OBJECT);
         this.isHistoryByUserVisible = ko.observable(historyStrategy === HistoryConstant.BY_USER);
+        this.isHistoryByTimeVisible = ko.observable(historyStrategy === HistoryConstant.BY_TIME);
         this.isMultiMergeVisible = ko.observable(mergeStrategy === MergeConstant.MULTI);
         this.isNotificationBarVisible = ko.observable(notificationStrategy === NotificationConstant.BAR);
         this.isBubbleNotificationVisible = ko.observable(notificationStrategy === NotificationConstant.BUBBLE);
         this.isObjectNotificationVisible = ko.observable(notificationStrategy === NotificationConstant.OBJECT);
-        this.fieldForHistory = "";
-        this.userForHistory = "";
+        this.fieldForHistory = ko.observable("");
+        this.userForHistory = ko.observable("");
         this.users = ko.observable([]);
 
         this.notification = ko.observable();
@@ -30,6 +31,13 @@ define(['lib/knockout', 'TextToken', 'constants/HistoryConstant', 'constants/Mer
         this.toolTipTop = ko.observable("50px");
         this.toolTipLeft = ko.observable("50px");
         this.toolTipArrow = ko.observable("right");
+
+        this.historyTop = ko.observable();
+        this.historyLeft = ko.observable();
+
+        this.isHistoryBoxVisible = ko.computed(function () {
+            return !(self.isHistoryByFieldVisible() && self.fieldForHistory() == '');
+        });
     }
 
     DynamicViewModel.prototype.update = function (fieldId, value, markupValue) {
@@ -47,12 +55,17 @@ define(['lib/knockout', 'TextToken', 'constants/HistoryConstant', 'constants/Mer
     };
 
     DynamicViewModel.prototype.showHistoryByField = function (fieldId) {
-        this.fieldForHistory = fieldId;
+        this.fieldForHistory(fieldId);
         this.history(this.historyRepo.getByField(fieldId));
+
+        var rect = document.getElementById(fieldId).getBoundingClientRect();
+
+        this.historyTop(rect.top + window.scrollY - 27 + "px");
+        this.historyLeft(rect.left + window.scrollX + rect.width + 25 + "px");
     };
 
     DynamicViewModel.prototype.showHistoryByUser = function (userId) {
-        this.userForHistory = userId;
+        this.userForHistory(userId);
         this.history(this.historyRepo.getByUser(userId));
     };
 

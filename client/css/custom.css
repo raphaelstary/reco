@@ -59,3 +59,7 @@
 .user-six {
     background-color: #add8e6;
 }
+
+.popover.right .arrow {
+    top: 46px;
+}

@@ -32,7 +32,15 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
 
         var history = this.configView.history(); // why not newVal? is there a diff? what did i do!
         this.view.history(this.historyManager.getHistoryData(history));
+
+        this.view.isHistoryByTimeVisible(history === HistoryConstant.BY_TIME);
+
         this.view.isHistoryByFieldVisible(history === HistoryConstant.BY_OBJECT);
+        if (history != HistoryConstant.BY_OBJECT) {
+            this.view.historyLeft("480px");
+            this.view.historyTop("70px");
+        }
+
         this.view.isHistoryByUserVisible(history === HistoryConstant.BY_USER);
         if (history === HistoryConstant.BY_USER) {
             this.view.users(this.history.getAllUsers())

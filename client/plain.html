@@ -260,16 +260,21 @@
         </li>
     </ul>
 
-    <div class="span3">
-        <div class="popover">
+    <div class="span3" data-bind="visible: isHistoryBoxVisible">
+        <div class="popover right" style="display: block" data-bind="style: {top: historyTop, left: historyLeft},
+            css: {right: isHistoryByFieldVisible}">
             <div class="arrow"></div>
             <div class="popover-inner">
-                <h3 class="popover-title">History</h3>
+                <h3 class="popover-title">History by
+                    <span data-bind="visible: isHistoryByFieldVisible">Object</span>
+                    <span data-bind="visible: isHistoryByUserVisible">User</span>
+                    <span data-bind="visible: isHistoryByTimeVisible">Time</span>
+                </h3>
 
                 <div class="popover-content " data-bind="foreach: history">
-                    <span data-bind="text: field"></span>:
-                    <span data-bind="text: value"></span> by
-                    <span data-bind="text: user"></span>
+                    <strong data-bind="text: field"></strong>:
+                    <code data-bind="text: value"></code>
+                    <small>by</small> <em data-bind="text: user"></em>
                     <br>
                 </div>
             </div>
