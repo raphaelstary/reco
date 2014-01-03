@@ -266,15 +266,19 @@
             <div class="arrow"></div>
             <div class="popover-inner">
                 <h3 class="popover-title">History by
-                    <span data-bind="visible: isHistoryByFieldVisible">Object</span>
-                    <span data-bind="visible: isHistoryByUserVisible">User</span>
-                    <span data-bind="visible: isHistoryByTimeVisible">Time</span>
+                    <strong data-bind="visible: isHistoryByFieldVisible, text: fieldForHistory"></strong>
+                    <strong data-bind="visible: isHistoryByUserVisible, text: userForHistory"></strong>
+                    <strong data-bind="visible: isHistoryByTimeVisible">Time</strong>
                 </h3>
 
                 <div class="popover-content " data-bind="foreach: history">
-                    <strong data-bind="text: field"></strong>:
+                    <span data-bind="visible: !$parent.isHistoryByFieldVisible()">
+                        <strong data-bind="text: field"></strong>:
+                    </span>
                     <code data-bind="text: value"></code>
-                    <small>by</small> <em data-bind="text: user"></em>
+                    <span data-bind="visible: !$parent.isHistoryByUserVisible()">
+                        <small>by</small> <em data-bind="text: user"></em>
+                    </span>
                     <br>
                 </div>
             </div>

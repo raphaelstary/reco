@@ -37,8 +37,12 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
 
         this.view.isHistoryByFieldVisible(history === HistoryConstant.BY_OBJECT);
         if (history != HistoryConstant.BY_OBJECT) {
+            this.view.fieldForHistory("");
             this.view.historyLeft("480px");
             this.view.historyTop("70px");
+        }
+        if (history != HistoryConstant.BY_USER) {
+            this.view.userForHistory("");
         }
 
         this.view.isHistoryByUserVisible(history === HistoryConstant.BY_USER);
