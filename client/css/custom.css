@@ -63,3 +63,7 @@
 .popover.right .arrow {
     top: 46px;
 }
+
+.popover.bottom .arrow {
+    left: 30px;
+}

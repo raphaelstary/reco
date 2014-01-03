@@ -252,8 +252,8 @@
         </div>
     </div>
 
-    <ul data-bind="visible: isHistoryByUserVisible, foreach: users">
-        <li>
+    <ul class="span3" style="list-style-type: none" data-bind="visible: isHistoryByUserVisible, foreach: users">
+        <li data-bind="attr: {id: $data}" style="display: inline">
             <a href="#" data-bind="click: $parent.showHistoryByUser.bind($parent, $data)">
                 <i class="icon-user"></i> <span data-bind="text: $data"></span>
             </a>
@@ -261,8 +261,8 @@
     </ul>
 
     <div class="span3" data-bind="visible: isHistoryBoxVisible">
-        <div class="popover right" style="display: block" data-bind="style: {top: historyTop, left: historyLeft},
-            css: {right: isHistoryByFieldVisible}">
+        <div class="popover" style="display: block" data-bind="style: {top: historyTop, left: historyLeft},
+            css: {right: isHistoryByFieldVisible, bottom: isHistoryByUserVisible}">
             <div class="arrow"></div>
             <div class="popover-inner">
                 <h3 class="popover-title">History by

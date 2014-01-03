@@ -58,7 +58,12 @@ define(['lib/knockout', 'TextToken', 'constants/HistoryConstant', 'constants/Mer
         this.fieldForHistory(fieldId);
         this.history(this.historyRepo.getByField(fieldId));
 
-        var rect = document.getElementById(fieldId).getBoundingClientRect();
+        var rect;
+        if (this.isMultiMergeVisible()) {
+            rect = document.getElementById(fieldId + InputConstant.EDITABLE_POSTFIX).getBoundingClientRect();
+        } else {
+            rect = document.getElementById(fieldId).getBoundingClientRect();
+        }
 
         this.historyTop(rect.top + window.scrollY - 27 + "px");
         this.historyLeft(rect.left + window.scrollX + rect.width + 25 + "px");
@@ -67,6 +72,11 @@ define(['lib/knockout', 'TextToken', 'constants/HistoryConstant', 'constants/Mer
     DynamicViewModel.prototype.showHistoryByUser = function (userId) {
         this.userForHistory(userId);
         this.history(this.historyRepo.getByUser(userId));
+
+        var rect = document.getElementById(userId).getBoundingClientRect();
+
+        this.historyTop(rect.top + window.scrollY + rect.height + 10 + "px");
+        this.historyLeft(rect.left + window.scrollX + "px");
     };
 
     return DynamicViewModel;
