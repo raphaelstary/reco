@@ -4,12 +4,6 @@
     <title>reco - real time collaboration</title>
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
-    <style type="text/css">
-        body {
-            padding-top: 60px;
-            padding-bottom: 40px;
-        }
-    </style>
 </head>
 <body>
 
@@ -46,8 +40,10 @@
     <div id="statusbar" class="navbar" data-bind="visible: isNotificationBarVisible">
         <div class="navbar-inner">
             <div class="container">
-                <p class="navbar-text">
-                    <span data-bind="text: notification"></span>
+                <p class="navbar-text text-center" data-bind="visible: isBarInfoVisible">
+                    <em data-bind="text: barUser"></em>
+                    <small>is typing in</small>
+                    <strong data-bind="text: barField"></strong>
                 </p>
             </div>
         </div>

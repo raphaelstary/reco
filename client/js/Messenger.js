@@ -1,4 +1,4 @@
-define(['constants/NotificationConstant'], function (NotificationConstant) {
+define(['constants/NotificationConstant', 'constants/InputConstant'], function (NotificationConstant, InputConstant) {
     function Messenger(notificationStrategy, view) {
         this.currentStrategy = notificationStrategy;
         this.view = view;
@@ -6,7 +6,8 @@ define(['constants/NotificationConstant'], function (NotificationConstant) {
 
     Messenger.prototype.push = function (data) {
         if (this.currentStrategy === NotificationConstant.BAR) {
-            this.view.notification("user " + data.user + " is typing in " + data.field);
+            this.view.barUser(data.user);
+            this.view.barField(data.field);
 
         } else if (this.currentStrategy === NotificationConstant.BUBBLE) {
             this.view.notifications.push(data);
@@ -20,7 +21,12 @@ define(['constants/NotificationConstant'], function (NotificationConstant) {
         } else if (this.currentStrategy === NotificationConstant.OBJECT) {
             this.view.notification("user " + data.user + " is typing in " + data.field);
 
-            var rect = document.getElementById(data.field).getBoundingClientRect();
+            var rect;
+            if (this.view.isMultiMergeVisible()) {
+                rect = document.getElementById(data.field + InputConstant.EDITABLE_POSTFIX).getBoundingClientRect();
+            } else {
+                rect = document.getElementById(data.field).getBoundingClientRect();
+            }
 
             if (rect.bottom < window.scrollY) {
                 this.view.toolTipLeft(rect.left + window.scrollX + rect.width + "px");

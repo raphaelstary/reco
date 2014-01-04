@@ -1,13 +1,12 @@
 define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/MergeConstant',
-    'constants/NotificationConstant', 'lib/knockout', 'TextToken', 'utils/generateId'], function (InputConstant, HistoryConstant, MergeConstant, NotificationConstant, ko, TextToken, generateId) {
-    function SubscriptionManager(view, configView, connector, brain, urlJuggler, urlParams, generateIdFn, history, historyManager, messenger) {
+    'constants/NotificationConstant', 'utils/generateId'], function (InputConstant, HistoryConstant, MergeConstant, NotificationConstant, generateId) {
+    function SubscriptionManager(view, configView, connector, brain, urlJuggler, urlParams, history, historyManager, messenger) {
         this.view = view;
         this.configView = configView;
         this.connector = connector;
         this.brain = brain;
         this.urlJuggler = urlJuggler;
         this.urlParams = urlParams;
-        this.generateId = generateIdFn;
         this.history = history;
         this.historyManager = historyManager;
         this.messenger = messenger;
@@ -129,7 +128,7 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
         var self = this;
         var data = {
             user: self.brain.userId,
-            id: self.generateId(),
+            id: generateId(),
             field: key,
             value: value,
             htmlValue: htmlValue

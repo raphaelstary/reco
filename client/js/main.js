@@ -1,6 +1,6 @@
 require(['require', 'lib/knockout', 'Connector', 'Brain', 'History', 'Messenger', 'constants/MergeConstant',
     'constants/HistoryConstant', 'constants/NotificationConstant', 'view/ConfigViewModel', 'view/DynamicViewModel',
-    'utils/getValues', 'utils/parseUrlParams', 'UrlJuggler', 'utils/generateId', 'constants/InputConstant', 'App',
+    'utils/getValues', 'utils/parseUrlParams', 'UrlJuggler', 'constants/InputConstant', 'App',
     'ConnectionManager', 'HistoryManager', 'SubscriptionManager', 'view/ContentEditableBinding',
     'lib/domReady'], function (require) {
 
@@ -19,7 +19,6 @@ require(['require', 'lib/knockout', 'Connector', 'Brain', 'History', 'Messenger'
         getValues = require('utils/getValues'),
         parseUrlParams = require('utils/parseUrlParams'),
         UrlJuggler = require('UrlJuggler'),
-        generateId = require('utils/generateId'),
         InputConstant = require('constants/InputConstant'),
         App = require('App'),
         ConnectionManager = require('ConnectionManager'),
@@ -71,7 +70,7 @@ require(['require', 'lib/knockout', 'Connector', 'Brain', 'History', 'Messenger'
 
     var historyManager = new HistoryManager(history, view);
     var subscriptionManager = new SubscriptionManager(view, configView, connector, brain, urlJuggler, urlParams,
-        generateId, history, historyManager, messenger);
+        history, historyManager, messenger);
     var connectionManager = new ConnectionManager(view, configView, brain, historyManager, history, messenger);
     
     ko.bindingHandlers.contentEditable = getContentEditableBinding(brain, subscriptionManager);

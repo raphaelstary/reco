@@ -1,5 +1,5 @@
-define(['lib/knockout', 'TextToken', 'constants/HistoryConstant', 'constants/MergeConstant',
-    'constants/InputConstant', 'constants/NotificationConstant'], function (ko, TextToken, HistoryConstant, MergeConstant,
+define(['lib/knockout', 'constants/HistoryConstant', 'constants/MergeConstant',
+    'constants/InputConstant', 'constants/NotificationConstant'], function (ko, HistoryConstant, MergeConstant,
                                                                     InputConstant, NotificationConstant) {
 
     function DynamicViewModel(inputIds, history, historyStrategy, mergeStrategy, notificationStrategy) {
@@ -25,18 +25,24 @@ define(['lib/knockout', 'TextToken', 'constants/HistoryConstant', 'constants/Mer
         this.userForHistory = ko.observable("");
         this.users = ko.observable([]);
 
-        this.notification = ko.observable();
         this.notifications = ko.observableArray();
 
-        this.toolTipTop = ko.observable("50px");
-        this.toolTipLeft = ko.observable("50px");
-        this.toolTipArrow = ko.observable("right");
+        this.toolTipTop = ko.observable();
+        this.toolTipLeft = ko.observable();
+        this.toolTipArrow = ko.observable();
 
         this.historyTop = ko.observable();
         this.historyLeft = ko.observable();
 
         this.isHistoryBoxVisible = ko.computed(function () {
             return !(self.isHistoryByFieldVisible() && self.fieldForHistory() == '');
+        });
+
+        this.barUser = ko.observable();
+        this.barField = ko.observable();
+
+        this.isBarInfoVisible = ko.computed(function () {
+            return self.barUser() != null && self.barUser() != "";
         });
     }
 

@@ -10,7 +10,7 @@ define(['../lib/knockout'], function (ko) {
         this.user = ko.observable(user);
         this.cssClass = ko.observable(cssClass);
 
-        this.isConfigVisible = ko.observable(true);
+        this.isConfigVisible = ko.observable(false);
     }
 
     ConfigViewModel.prototype.toggleShowConfig = function () {
