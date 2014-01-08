@@ -10,13 +10,27 @@ define(['constants/NotificationConstant', 'constants/InputConstant'], function (
             this.view.barField(data.field);
 
         } else if (this.currentStrategy === NotificationConstant.BUBBLE) {
-            this.view.notifications.push(data);
+            var last = this.view.notifications()[this.view.notifications().length - 1];
 
-            (function removeAgain(data, self) {
-                setTimeout(function () {
-                    self.view.notifications.remove(data);
+            if (last != null && last.user == data.user && last.field == data.field && this.timeoutId != null) {
+
+                clearTimeout(this.timeoutId);
+                var self = this;
+                this.timeoutId = setTimeout(function () {
+                    self.view.notifications.remove(last);
                 }, 3000);
-            })(data, this);
+
+            } else {
+                this.view.notifications.push(data);
+
+                this.timeoutId = (function removeAgain(data, self) {
+                    return setTimeout(function () {
+                        self.view.notifications.remove(data);
+                    }, 3000);
+                })(data, this);
+            }
+
+
 
         } else if (this.currentStrategy === NotificationConstant.OBJECT) {
             this.view.notification("user " + data.user + " is typing in " + data.field);
