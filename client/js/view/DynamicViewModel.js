@@ -1,6 +1,5 @@
 define(['lib/knockout', 'constants/HistoryConstant', 'constants/MergeConstant',
-    'constants/InputConstant', 'constants/NotificationConstant'], function (ko, HistoryConstant, MergeConstant,
-                                                                    InputConstant, NotificationConstant) {
+    'constants/InputConstant', 'constants/NotificationConstant'], function (ko, HistoryConstant, MergeConstant, InputConstant, NotificationConstant) {
 
     function DynamicViewModel(inputIds, history, historyStrategy, mergeStrategy, notificationStrategy) {
         this.historyRepo = history;
@@ -85,6 +84,38 @@ define(['lib/knockout', 'constants/HistoryConstant', 'constants/MergeConstant',
 
         this.historyTop(rect.top + window.scrollY + rect.height + 10 + "px");
         this.historyLeft(rect.left + window.scrollX + "px");
+    };
+
+    DynamicViewModel.prototype.scrollToFieldFromBar = function () {
+        var elem;
+        if (this.isMultiMergeVisible()) {
+            elem = document.getElementById(this.barField() + InputConstant.EDITABLE_POSTFIX);
+        } else {
+            elem = document.getElementById(this.barField());
+        }
+        elem.scrollIntoView();
+    };
+
+    DynamicViewModel.prototype.scrollToFieldFromBubble = function (bubble) {
+        var elem;
+        if (this.isMultiMergeVisible()) {
+            elem = document.getElementById(bubble.field + InputConstant.EDITABLE_POSTFIX);
+        } else {
+            elem = document.getElementById(bubble.field);
+        }
+        elem.scrollIntoView();
+    };
+
+    DynamicViewModel.prototype.scrollToFieldFromToolTip = function () {
+        var elem;
+        if (this.isMultiMergeVisible()) {
+            elem = document.getElementById(this.barField() + InputConstant.EDITABLE_POSTFIX);
+        } else {
+            elem = document.getElementById(this.barField());
+        }
+        elem.scrollIntoView();
+
+        this.isToolTipVisible(false);
     };
 
     return DynamicViewModel;

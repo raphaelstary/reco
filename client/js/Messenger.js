@@ -45,7 +45,6 @@ define(['constants/NotificationConstant', 'constants/InputConstant'], function (
         } else if (this.currentStrategy === NotificationConstant.OBJECT) {
             this.view.isToolTipVisible(true);
 
-//            this.view.notification("user " + data.user + " is typing in " + data.field);
             this.view.barUser(data.user);
             this.view.barField(data.field);
 

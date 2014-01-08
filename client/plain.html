@@ -40,7 +40,7 @@
     <div id="statusbar" class="navbar" data-bind="visible: isNotificationBarVisible">
         <div class="navbar-inner">
             <div class="container">
-                <p class="navbar-text text-center" data-bind="visible: isBarInfoVisible">
+                <p class="navbar-text text-center" data-bind="visible: isBarInfoVisible, click: scrollToFieldFromBar">
                     <em data-bind="text: barUser"></em>
                     <small>is typing in</small>
                     <strong data-bind="text: barField"></strong>
@@ -242,7 +242,8 @@
     <div data-bind="visible: isObjectNotificationVisible">
         <div class="tooltip in" data-bind="style: {top: toolTipTop, left: toolTipLeft, display: 'block'},
             css: {right: toolTipArrow() == 'right', bottom: toolTipArrow() == 'bottom', top: toolTipArrow() == 'top'},
-            visible: isToolTipVisible">
+            visible: isToolTipVisible,
+            click: scrollToFieldFromToolTip.bind($root)">
             <div class="tooltip-arrow"></div>
             <div class="tooltip-inner">
                 <em data-bind="text: barUser"></em>
@@ -287,10 +288,10 @@
 
     <div class="span3 offset10" style="position: absolute; bottom: 0"
          data-bind="visible: isBubbleNotificationVisible, foreach: notifications">
-        <div class="alert alert-info">
-            <span data-bind="text: user"></span>
-            is typing in
-            <span data-bind="text: field"></span>
+        <div class="alert alert-info" data-bind="click: $root.scrollToFieldFromBubble.bind($root)">
+            <em data-bind="text: user"></em>
+            <small>is typing in</small>
+            <strong data-bind="text: field"></strong>
         </div>
     </div>
 </div>
