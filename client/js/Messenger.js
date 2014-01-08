@@ -5,9 +5,20 @@ define(['constants/NotificationConstant', 'constants/InputConstant'], function (
     }
 
     Messenger.prototype.push = function (data) {
+        var self = this;
         if (this.currentStrategy === NotificationConstant.BAR) {
+
+            if (this.view.barUser() != null && this.view.barField() != null && this.timeoutBarId != null) {
+                clearTimeout(this.timeoutBarId);
+            }
+
             this.view.barUser(data.user);
             this.view.barField(data.field);
+
+            this.timeoutBarId = setTimeout(function () {
+                self.view.barUser(null);
+                self.view.barField(null);
+            }, 5000);
 
         } else if (this.currentStrategy === NotificationConstant.BUBBLE) {
             var last = this.view.notifications()[this.view.notifications().length - 1];
@@ -15,7 +26,6 @@ define(['constants/NotificationConstant', 'constants/InputConstant'], function (
             if (last != null && last.user == data.user && last.field == data.field && this.timeoutId != null) {
 
                 clearTimeout(this.timeoutId);
-                var self = this;
                 this.timeoutId = setTimeout(function () {
                     self.view.notifications.remove(last);
                 }, 3000);
