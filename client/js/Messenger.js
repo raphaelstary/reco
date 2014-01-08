@@ -43,7 +43,11 @@ define(['constants/NotificationConstant', 'constants/InputConstant'], function (
 
 
         } else if (this.currentStrategy === NotificationConstant.OBJECT) {
-            this.view.notification("user " + data.user + " is typing in " + data.field);
+            this.view.isToolTipVisible(true);
+
+//            this.view.notification("user " + data.user + " is typing in " + data.field);
+            this.view.barUser(data.user);
+            this.view.barField(data.field);
 
             var rect;
             if (this.view.isMultiMergeVisible()) {
@@ -67,6 +71,12 @@ define(['constants/NotificationConstant', 'constants/InputConstant'], function (
                 this.view.toolTipTop(rect.top + window.scrollY + "px");
                 this.view.toolTipArrow("right");
             }
+
+            clearTimeout(this.timeoutObjectId);
+
+            this.timeoutObjectId = setTimeout(function () {
+                self.view.isToolTipVisible(false);
+            }, 5000);
         }
     };
 

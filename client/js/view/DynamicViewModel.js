@@ -44,6 +44,8 @@ define(['lib/knockout', 'constants/HistoryConstant', 'constants/MergeConstant',
         this.isBarInfoVisible = ko.computed(function () {
             return self.barUser() != null && self.barUser() != "";
         });
+
+        this.isToolTipVisible = ko.observable(false);
     }
 
     DynamicViewModel.prototype.update = function (fieldId, value, markupValue) {

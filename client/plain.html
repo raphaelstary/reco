@@ -241,9 +241,13 @@
 
     <div data-bind="visible: isObjectNotificationVisible">
         <div class="tooltip in" data-bind="style: {top: toolTipTop, left: toolTipLeft, display: 'block'},
-            css: {right: toolTipArrow() == 'right', bottom: toolTipArrow() == 'bottom', top: toolTipArrow() == 'top'}">
+            css: {right: toolTipArrow() == 'right', bottom: toolTipArrow() == 'bottom', top: toolTipArrow() == 'top'},
+            visible: isToolTipVisible">
             <div class="tooltip-arrow"></div>
-            <div class="tooltip-inner" data-bind="text: notification">
+            <div class="tooltip-inner">
+                <em data-bind="text: barUser"></em>
+                <small>is typing in</small>
+                <strong data-bind="text: barField"></strong>
             </div>
         </div>
     </div>
