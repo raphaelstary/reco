@@ -67,3 +67,7 @@
 .popover.bottom .arrow {
     left: 30px;
 }
+.popover-content {
+    max-height: 600px;
+    overflow: auto;
+}
