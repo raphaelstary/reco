@@ -12,7 +12,7 @@ define(['lib/knockout', 'constants/HistoryConstant', 'constants/MergeConstant',
             self[inputId + InputConstant.EDITABLE_POSTFIX] = ko.observable();
             self[inputId + InputConstant.DYNAMIC_POSTFIX] = ko.observable(false);
 
-            self[inputId + "Scroll"] = function () {
+            self[inputId + InputConstant.SCROLL_POSTFIX] = function () {
                 var elem;
                 if (self.isMultiMergeVisible()) {
                     elem = document.getElementById(inputId + InputConstant.EDITABLE_POSTFIX);
@@ -110,7 +110,12 @@ define(['lib/knockout', 'constants/HistoryConstant', 'constants/MergeConstant',
 
         var rect;
         if (this.isMultiMergeVisible()) {
-            rect = document.getElementById(fieldId + InputConstant.EDITABLE_POSTFIX).getBoundingClientRect();
+            if (document.getElementById(fieldId + InputConstant.EDITABLE_POSTFIX) != null) {
+                rect = document.getElementById(fieldId + InputConstant.EDITABLE_POSTFIX).getBoundingClientRect();
+            } else {
+                rect = document.getElementById(fieldId).getBoundingClientRect();
+            }
+
         } else {
             rect = document.getElementById(fieldId).getBoundingClientRect();
         }
@@ -133,6 +138,9 @@ define(['lib/knockout', 'constants/HistoryConstant', 'constants/MergeConstant',
         var elem;
         if (this.isMultiMergeVisible()) {
             elem = document.getElementById(this.barField() + InputConstant.EDITABLE_POSTFIX);
+            if (elem == null) {
+                elem = document.getElementById(this.barField());
+            }
         } else {
             elem = document.getElementById(this.barField());
         }
@@ -143,6 +151,9 @@ define(['lib/knockout', 'constants/HistoryConstant', 'constants/MergeConstant',
         var elem;
         if (this.isMultiMergeVisible()) {
             elem = document.getElementById(bubble.field + InputConstant.EDITABLE_POSTFIX);
+            if (elem == null) {
+                elem = document.getElementById(bubble.field);
+            }
         } else {
             elem = document.getElementById(bubble.field);
         }
@@ -153,6 +164,9 @@ define(['lib/knockout', 'constants/HistoryConstant', 'constants/MergeConstant',
         var elem;
         if (this.isMultiMergeVisible()) {
             elem = document.getElementById(this.barField() + InputConstant.EDITABLE_POSTFIX);
+            if (elem == null) {
+                elem = document.getElementById(this.barField());
+            }
         } else {
             elem = document.getElementById(this.barField());
         }

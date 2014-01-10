@@ -50,17 +50,21 @@ define(['constants/NotificationConstant', 'constants/InputConstant'], function (
             this.view.barField(data.field);
 
             if (this.view.isMultiMergeVisible()) {
-                rect = document.getElementById(data.field + InputConstant.EDITABLE_POSTFIX).getBoundingClientRect();
+                if (document.getElementById(data.field + InputConstant.EDITABLE_POSTFIX) != null) {
+                    rect = document.getElementById(data.field + InputConstant.EDITABLE_POSTFIX).getBoundingClientRect();
+                } else {
+                    rect = document.getElementById(data.field).getBoundingClientRect();
+                }
             } else {
                 rect = document.getElementById(data.field).getBoundingClientRect();
             }
 
-            if (rect.bottom < window.scrollY) {
+            if (rect.bottom < 40) {
                 this.view.toolTipLeft(rect.left + window.scrollX + rect.width + "px");
                 this.view.toolTipTop(50 + window.scrollY + "px");
                 this.view.toolTipArrow("bottom");
 
-            } else if (rect.top > (window.scrollY + window.innerHeight)) {
+            } else if (rect.top > window.innerHeight - 20) {
                 this.view.toolTipLeft(rect.left + window.scrollX + rect.width + "px");
                 this.view.toolTipTop(window.innerHeight - 50 + window.scrollY + "px");
                 this.view.toolTipArrow("top");
@@ -80,7 +84,12 @@ define(['constants/NotificationConstant', 'constants/InputConstant'], function (
         } else if (this.currentStrategy === NotificationConstant.DYNAMIC_DOM) {
 
             if (this.view.isMultiMergeVisible()) {
-                rect = document.getElementById(data.field + InputConstant.EDITABLE_POSTFIX).getBoundingClientRect();
+                if (document.getElementById(data.field + InputConstant.EDITABLE_POSTFIX)) {
+                    rect = document.getElementById(data.field + InputConstant.EDITABLE_POSTFIX).getBoundingClientRect();
+                } else {
+                    rect = document.getElementById(data.field).getBoundingClientRect();
+                }
+
             } else {
                 rect = document.getElementById(data.field).getBoundingClientRect();
             }
@@ -94,7 +103,7 @@ define(['constants/NotificationConstant', 'constants/InputConstant'], function (
                 this.view.isDynamicTop(true);
                 this.view[data.field + InputConstant.DYNAMIC_POSTFIX](true);
 
-            } else if (rect.top > (window.scrollY + window.innerHeight)) {
+            } else if (rect.top > window.innerHeight - 20) {
                 //bottom
                 this.view.isDynamicBottom(true);
                 this.view[data.field + InputConstant.DYNAMIC_POSTFIX](true);

@@ -236,8 +236,8 @@
 
             </span>
 
-<label>Input ten</label>
-<select>
+<label for="inputTen">Input ten</label>
+<select id="inputTen">
     <option>1</option>
     <option>2</option>
     <option>3</option>
@@ -245,8 +245,8 @@
     <option>5</option>
 </select>
 
-<label>Input eleven</label>
-<select multiple="multiple">
+<label for="inputEleven">Input eleven</label>
+<select id="inputEleven" multiple="multiple">
     <option>1</option>
     <option>2</option>
     <option>3</option>
@@ -256,29 +256,47 @@
 
 
 <label class="checkbox">
-    <input type="checkbox" value="checkOne">
-    check one
+    <input id="inputTwelveChecked" type="checkbox" value="checkOne" data-bind="checked: inputTwelveChecked">
+    check one - input twelve
 </label>
+<span class="help-inline" data-bind="visible: isHistoryByFieldVisible">
+                <a href="#" data-bind="click: showHistoryByField.bind($data, 'inputTwelveChecked')">
+                    <i class="icon-time"></i>
+                </a>
+            </span>
 
 <label class="checkbox">
-    <input type="checkbox" value="checkTwo">
-    check two
+    <input id="inputThirteenChecked" type="checkbox" value="checkTwo" data-bind="checked: inputThirteenChecked">
+    check two - input thirteen
+</label>
+<span class="help-inline" data-bind="visible: isHistoryByFieldVisible">
+                <a href="#" data-bind="click: showHistoryByField.bind($data, 'inputThirteenChecked')">
+                    <i class="icon-time"></i>
+                </a>
+            </span>
+
+<label class="radio">
+    <input id="inputFourteenChecked" type="radio" name="optionsRadios" value="option1"
+           data-bind="checked: inputFourteenChecked">
+    Option one - input fourteen
 </label>
 
 <label class="radio">
-    <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
-    Option one
+    <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2"
+           data-bind="checked: inputFourteenChecked">
+    Option two - input fourteen
 </label>
 
 <label class="radio">
-    <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-    Option two
+    <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3"
+           data-bind="checked: inputFourteenChecked">
+    Option three - input fourteen
 </label>
-
-<label class="radio">
-    <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">
-    Option three
-</label>
+<span class="help-inline" data-bind="visible: isHistoryByFieldVisible">
+                <a href="#" data-bind="click: showHistoryByField.bind($data, 'inputFourteenChecked')">
+                    <i class="icon-time"></i>
+                </a>
+            </span>
 
 <br>
 <button type="submit" class="btn btn-primary">Save</button>

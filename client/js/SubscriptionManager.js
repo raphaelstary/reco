@@ -87,7 +87,21 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
     SubscriptionManager.prototype.isSelectVar = function (key) {
         return key.toUpperCase().indexOf(InputConstant.PREFIX.toUpperCase()) !== -1 &&
             key.toUpperCase().indexOf(InputConstant.DISABLED_POSTFIX.toUpperCase()) === -1 &&
-            key.toUpperCase().indexOf(InputConstant.SELECTED_POSTFIX.toUpperCase()) !== -1;
+            key.toUpperCase().indexOf(InputConstant.SELECTED_POSTFIX.toUpperCase()) !== -1 &&
+            key.toUpperCase().indexOf(InputConstant.EDITABLE_POSTFIX.toUpperCase()) === -1 &&
+            key.toUpperCase().indexOf(InputConstant.CHECKED_POSTFIX.toUpperCase()) === -1 &&
+            key.toUpperCase().indexOf(InputConstant.DYNAMIC_POSTFIX.toUpperCase()) === -1 &&
+            key.toUpperCase().indexOf(InputConstant.SCROLL_POSTFIX.toUpperCase()) === -1;
+    };
+
+    SubscriptionManager.prototype.isCheckedVar = function (key) {
+        return key.toUpperCase().indexOf(InputConstant.CHECKED_POSTFIX.toUpperCase()) !== -1 &&
+            key.toUpperCase().indexOf(InputConstant.PREFIX.toUpperCase()) !== -1 &&
+            key.toUpperCase().indexOf(InputConstant.DISABLED_POSTFIX.toUpperCase()) === -1 &&
+            key.toUpperCase().indexOf(InputConstant.SELECTED_POSTFIX.toUpperCase()) === -1 &&
+            key.toUpperCase().indexOf(InputConstant.EDITABLE_POSTFIX.toUpperCase()) === -1 &&
+            key.toUpperCase().indexOf(InputConstant.DYNAMIC_POSTFIX.toUpperCase()) === -1 &&
+            key.toUpperCase().indexOf(InputConstant.SCROLL_POSTFIX.toUpperCase()) === -1;
     };
 
     SubscriptionManager.prototype.handleAllDynamicInputChange = function (key) {
@@ -109,16 +123,22 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
                     }
                 }
             });
+        } else if (this.isCheckedVar(key)) {
+            this.view[key].subscribe(function (newVal) {
+                self._newValueFromUser(key, newVal);
+            });
         }
     };
 
     SubscriptionManager.prototype.handleDynamicInputChangeOnlyByUser = function (field, key) {
         var self = this;
-        field.addEventListener('keydown', function (event) {
-            setTimeout(function () {
-                self._newValueFromUser(key, event.target.value);
-            }, 0);
-        });
+        if (!this.isCheckedVar(key)) {
+            field.addEventListener('keydown', function (event) {
+                setTimeout(function () {
+                    self._newValueFromUser(key, event.target.value);
+                }, 0);
+            });
+        }
     };
 
     SubscriptionManager.prototype.handleContentEditable = function (key, value, htmlValue) {
