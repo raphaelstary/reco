@@ -10,7 +10,27 @@ define(['lib/knockout', 'constants/HistoryConstant', 'constants/MergeConstant',
             self[inputId + InputConstant.DISABLED_POSTFIX] = ko.observable(false);
             self[inputId + InputConstant.SELECTED_POSTFIX] = ko.observable(false);
             self[inputId + InputConstant.EDITABLE_POSTFIX] = ko.observable();
+            self[inputId + InputConstant.DYNAMIC_POSTFIX] = ko.observable(false);
+
+            self[inputId + "Scroll"] = function () {
+                var elem;
+                if (self.isMultiMergeVisible()) {
+                    elem = document.getElementById(inputId + InputConstant.EDITABLE_POSTFIX);
+                } else {
+                    elem = document.getElementById(inputId);
+                }
+                elem.scrollIntoView(self.isDynamicBottom());
+                self.isDynamicBottom(false);
+                self.isDynamicTop(false);
+                self[inputId + InputConstant.DYNAMIC_POSTFIX](false);
+            }
         });
+
+        this.clearAllDynamic = function () {
+            inputIds.forEach(function (inputId) {
+                self[inputId + InputConstant.DYNAMIC_POSTFIX](false);
+            });
+        };
 
         this.history = ko.observable();
         this.isHistoryByFieldVisible = ko.observable(historyStrategy === HistoryConstant.BY_OBJECT);
@@ -20,6 +40,7 @@ define(['lib/knockout', 'constants/HistoryConstant', 'constants/MergeConstant',
         this.isNotificationBarVisible = ko.observable(notificationStrategy === NotificationConstant.BAR);
         this.isBubbleNotificationVisible = ko.observable(notificationStrategy === NotificationConstant.BUBBLE);
         this.isObjectNotificationVisible = ko.observable(notificationStrategy === NotificationConstant.OBJECT);
+        this.isDynamicNotificationVisible = ko.observable(notificationStrategy === NotificationConstant.DYNAMIC_DOM);
         this.fieldForHistory = ko.observable("");
         this.userForHistory = ko.observable("");
         this.users = ko.observable([]);
@@ -45,6 +66,28 @@ define(['lib/knockout', 'constants/HistoryConstant', 'constants/MergeConstant',
         });
 
         this.isToolTipVisible = ko.observable(false);
+
+        this.isDynamicNotificationFieldVisible = ko.computed(function () {
+            var isVisible = false;
+            for (var i = 0; i < inputIds.length; i++) {
+                if (self[inputIds[i] + InputConstant.DYNAMIC_POSTFIX]()) {
+                    isVisible = true;
+                    break;
+                }
+            }
+            return isVisible;
+        });
+
+        this.isDynamicTop = ko.observable(false);
+        this.isDynamicBottom = ko.observable(false);
+
+        this.isDynamicTopVisible = ko.computed(function () {
+            return self.isDynamicTop() && self.isDynamicNotificationFieldVisible();
+        });
+
+        this.isDynamicBottomVisible = ko.computed(function () {
+            return self.isDynamicBottom() && self.isDynamicNotificationFieldVisible();
+        });
     }
 
     DynamicViewModel.prototype.update = function (fieldId, value, markupValue) {

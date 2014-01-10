@@ -61,6 +61,7 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
         this.view.isNotificationBarVisible(newVal === NotificationConstant.BAR);
         this.view.isBubbleNotificationVisible(newVal === NotificationConstant.BUBBLE);
         this.view.isObjectNotificationVisible(newVal === NotificationConstant.OBJECT);
+        this.view.isDynamicNotificationVisible(newVal === NotificationConstant.DYNAMIC_DOM);
     };
 
     SubscriptionManager.prototype.handleUser = function (newVal) {

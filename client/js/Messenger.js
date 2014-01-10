@@ -5,6 +5,7 @@ define(['constants/NotificationConstant', 'constants/InputConstant'], function (
     }
 
     Messenger.prototype.push = function (data) {
+        var rect;
         var self = this;
         if (this.currentStrategy === NotificationConstant.BAR) {
 
@@ -48,7 +49,6 @@ define(['constants/NotificationConstant', 'constants/InputConstant'], function (
             this.view.barUser(data.user);
             this.view.barField(data.field);
 
-            var rect;
             if (this.view.isMultiMergeVisible()) {
                 rect = document.getElementById(data.field + InputConstant.EDITABLE_POSTFIX).getBoundingClientRect();
             } else {
@@ -76,6 +76,30 @@ define(['constants/NotificationConstant', 'constants/InputConstant'], function (
             this.timeoutObjectId = setTimeout(function () {
                 self.view.isToolTipVisible(false);
             }, 5000);
+
+        } else if (this.currentStrategy === NotificationConstant.DYNAMIC_DOM) {
+
+            if (this.view.isMultiMergeVisible()) {
+                rect = document.getElementById(data.field + InputConstant.EDITABLE_POSTFIX).getBoundingClientRect();
+            } else {
+                rect = document.getElementById(data.field).getBoundingClientRect();
+            }
+
+            this.view.clearAllDynamic();
+            this.view.isDynamicBottom(false);
+            this.view.isDynamicTop(false);
+
+            if (rect.bottom < 40) {
+                //top
+                this.view.isDynamicTop(true);
+                this.view[data.field + InputConstant.DYNAMIC_POSTFIX](true);
+
+            } else if (rect.top > (window.scrollY + window.innerHeight)) {
+                //bottom
+                this.view.isDynamicBottom(true);
+                this.view[data.field + InputConstant.DYNAMIC_POSTFIX](true);
+            }
+
         }
     };
 
