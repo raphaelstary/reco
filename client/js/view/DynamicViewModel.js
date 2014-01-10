@@ -23,6 +23,10 @@ define(['lib/knockout', 'constants/HistoryConstant', 'constants/MergeConstant',
                 self.isDynamicBottom(false);
                 self.isDynamicTop(false);
                 self[inputId + InputConstant.DYNAMIC_POSTFIX](false);
+            };
+
+            if (inputId.toUpperCase().indexOf(InputConstant.DISABLED_POSTFIX.toUpperCase()) !== -1) {
+                self[inputId] = ko.observableArray();
             }
         });
 

@@ -22,6 +22,27 @@ define(function () {
     };
 
     ConnectionManager.prototype.handleUpdate = function (data) {
+        if (this.brain.oldData != null && this.brain.oldData.field == data.field) {
+            if (this.brain.oldData.value == data.value) {
+                return;
+            } else if (Array.isArray(this.brain.oldData.value) && Array.isArray(data.value)) {
+                var expected = this.brain.oldData.value;
+                var actual = data.value;
+
+                if (expected.length == actual.length) {
+                    var equals = true;
+                    for (var i = 0; i < expected.length; i++) {
+                        if (expected[i] != actual[i]) {
+                            equals = false;
+                            break;
+                        }
+                    }
+                    if (equals) {
+                        return;
+                    }
+                }
+            }
+        }
 
         this.messenger.push(data);
         this.history.add(data);

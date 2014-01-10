@@ -155,6 +155,8 @@ define(['constants/InputConstant', 'constants/HistoryConstant', 'constants/Merge
             htmlValue: htmlValue
         };
 
+        self.brain.oldData = data;
+
         self.history.add(data);
         self.connector.send(data);
 

@@ -63,6 +63,10 @@ require(['require', 'lib/knockout', 'Connector', 'Brain', 'History', 'Messenger'
     for (var i = 0; i < inputs.length; i++) {
         inputIds.push(inputs[i].id);
     }
+    var selects = document.querySelectorAll('select[id*=' + InputConstant.PREFIX + ']');
+    for (var u = 0; u < selects.length; u++) {
+        inputIds.push(selects[u].id);
+    }
 
     var view = new DynamicViewModel(inputIds, history, configView.history(), configView.merge(), configView.notification());
 

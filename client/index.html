@@ -51,7 +51,7 @@
 
 <div class="span5 offset1">
 <fieldset>
-<legend>Plain</legend>
+<legend>Input fields</legend>
 
 <label for="inputOne">Input one</label>
 
@@ -236,23 +236,35 @@
 
             </span>
 
-<label for="inputTen">Input ten</label>
-<select id="inputTen">
-    <option>1</option>
-    <option>2</option>
-    <option>3</option>
-    <option>4</option>
-    <option>5</option>
-</select>
+<legend>different inputs</legend>
 
-<label for="inputEleven">Input eleven</label>
-<select id="inputEleven" multiple="multiple">
+<label for="inputTenChecked">Input ten</label>
+<select id="inputTenChecked" data-bind="value: inputTenChecked">
     <option>1</option>
     <option>2</option>
     <option>3</option>
     <option>4</option>
     <option>5</option>
 </select>
+            <span class="help-inline" data-bind="visible: isHistoryByFieldVisible">
+                <a href="#" data-bind="click: showHistoryByField.bind($data, 'inputTenChecked')">
+                    <i class="icon-time"></i>
+                </a>
+            </span>
+
+<label for="inputElevenCheckedMultiple">Input eleven</label>
+<select id="inputElevenCheckedMultiple" multiple="multiple" data-bind="selectedOptions: inputElevenCheckedMultiple">
+    <option>one</option>
+    <option>two</option>
+    <option>three</option>
+    <option>four</option>
+    <option>five</option>
+</select>
+            <span class="help-inline" data-bind="visible: isHistoryByFieldVisible">
+                <a href="#" data-bind="click: showHistoryByField.bind($data, 'inputElevenCheckedMultiple')">
+                    <i class="icon-time"></i>
+                </a>
+            </span>
 
 
 <label class="checkbox">
