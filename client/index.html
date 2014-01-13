@@ -8,32 +8,39 @@
 <body>
 
 <div id="config" class="navbar navbar-inverse navbar-fixed-top" style="z-index: 1000000000000000000000000000000000000">
-    <div class="navbar-inner" data-bind="visible: isConfigVisible">
-        <div class="container">
 
-            <div class="nav-collapse collapse navbar-form form-inline navbar-text" data-bind="visible: isConfigVisible">
-                <label for="merge">merge strategy</label>
-                <select id="merge" class="span2"
+    <div class="pull-right" style="margin-top: 10px; margin-right: 20px">
+
+        <a href="#" data-bind="click: toggleShowConfig.bind($root)">
+            <i class="icon-cog"></i>
+        </a>
+        <div class="popover bottom" style="margin-left: -145px" data-bind="visible: isConfigVisible">
+            <div class="arrow" style="margin-left: 110px"></div>
+            <div class="popover-inner">
+                <h3 class="popover-title">Config</h3>
+
+                <div class="popover-content">
+                    <label for="merge">merge strategy</label>
+                    <select id="merge" class="span2"
                         data-bind="options: mergeValues, value: merge">
-                </select>
-                <label for="history">history strategy</label>
-                <select id="history" class="span2"
+                    </select>
+                    <label for="history">history strategy</label>
+                    <select id="history" class="span2"
                         data-bind="options: historyValues, value: history">
-                </select>
+                    </select>
 
 
-                <label for="notification">notify strategy</label>
-                <select id="notification" class="span2"
+                    <label for="notification">notify strategy</label>
+                    <select id="notification" class="span2"
                         data-bind="options: notificationValues, value: notification">
-                </select>
-                <label for="user">user</label>
-                <input id="user" class="span2" type="text" placeholder="user name" data-bind="value: user">
+                    </select>
+                    <label for="user">user</label>
+                    <input id="user" class="span2" type="text" placeholder="user name" data-bind="value: user">
+                </div>
             </div>
-            <!--/.nav-collapse -->
         </div>
     </div>
-    <a href="#" data-bind="click: toggleShowConfig.bind($root), visible: !isConfigVisible()">show config</a>
-    <a href="#" data-bind="click: toggleShowConfig.bind($root), visible: isConfigVisible">hide config</a>
+    <p class="navbar-text pull-right" data-bind="text: user, css: cssClass" style="margin-right: 15px; padding-left: 10px; padding-right: 10px"></p>
 </div>
 
 <div id="mainView" class="row">
@@ -57,7 +64,7 @@
 
 <input id="inputOne" type="text"
        data-bind="value: inputOne, valueUpdate: 'afterkeydown', disable: inputOneDisabled,
-                   hasFocus: inputOneSelected, visible: !isMultiMergeVisible()">
+                  hasFocus: inputOneSelected, visible: !isMultiMergeVisible()">
 
 <div id="inputOneEditable" class="editable"
      data-bind="visible: isMultiMergeVisible, attr: {contentEditable: isMultiMergeVisible},

@@ -44,7 +44,7 @@ require(['require', 'lib/knockout', 'Connector', 'Brain', 'History', 'Messenger'
 
     var configView = new ConfigViewModel(getValues(MergeConstant), getValues(HistoryConstant),
         getValues(NotificationConstant),
-        mergeStrategy, historyStrategy, notificationStrategy, urlParams['user']);
+        mergeStrategy, historyStrategy, notificationStrategy, urlParams['user'], urlParams['css']);
 
 
 
